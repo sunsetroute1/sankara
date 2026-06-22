@@ -141,10 +141,20 @@
                 android:id="@+id/cta_pick_image_file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="8dp"
                 android:text="@string/pick_image_file_cta_text"
                 app:icon="@android:drawable/ic_menu_gallery"
                 app:iconGravity="textStart" />
+
+            <TextView
+                android:id="@+id/shareReceiveHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/share_receive_hint"
+                android:textColor="@color/sankara_text_muted"
+                android:textSize="12sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cta_now_playing"

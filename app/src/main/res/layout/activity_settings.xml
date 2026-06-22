@@ -54,9 +54,13 @@
                 android:padding="20dp">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/quoteCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     app:cardBackgroundColor="#CC1A1A1A"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="6dp">
@@ -87,12 +91,21 @@
                             tools:text="We must dare to invent the future." />
 
                         <TextView
+                            android:id="@+id/sankaraQuoteAuthor"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="@string/settings_quote_attribution"
                             android:textColor="@color/sankara_text_muted"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            tools:text="— Thomas Sankara" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/settings_quote_tap_hint"
+                            android:textColor="@color/sankara_text_muted"
+                            android:textSize="11sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 

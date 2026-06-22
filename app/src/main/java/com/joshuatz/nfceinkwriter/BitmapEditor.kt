@@ -19,13 +19,21 @@ data class ImageEditParams(
     var contrast: Float = 1f,
     /** -100..100 brightness offset. */
     var brightness: Int = 0,
+    /** Black/white cutoff for e-ink (0 = more black, 255 = more white). */
+    var threshold: Int = 128,
 ) {
     fun normalizedRotation(): Int = ((rotationQuarterTurns % 4) + 4) % 4
 
     fun isDefault(): Boolean =
         !flipHorizontal && !flipVertical && !invert &&
             normalizedRotation() == 0 &&
-            contrast == 1f && brightness == 0
+            contrast == 1f && brightness == 0 && threshold == 128
+
+    fun applyEinkEnhancePreset() {
+        contrast = 1.35f
+        brightness = 12
+        threshold = 132
+    }
 }
 
 object BitmapEditor {
@@ -40,8 +48,8 @@ object BitmapEditor {
         if (params.flipHorizontal || params.flipVertical) {
             bmp = flip(bmp, params.flipHorizontal, params.flipVertical)
         }
-        if (params.contrast != 1f || params.brightness != 0) {
-            bmp = adjustContrastBrightness(bmp, params.contrast, params.brightness)
+        if (params.contrast != 1f || params.brightness != 0 || params.threshold != 128) {
+            bmp = adjustContrastBrightness(bmp, params.contrast, params.brightness, params.threshold)
         }
         if (params.invert) {
             bmp = invertColors(bmp)
@@ -69,9 +77,15 @@ object BitmapEditor {
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 
-    private fun adjustContrastBrightness(source: Bitmap, contrast: Float, brightness: Int): Bitmap {
+    private fun adjustContrastBrightness(
+        source: Bitmap,
+        contrast: Float,
+        brightness: Int,
+        threshold: Int = 128,
+    ): Bitmap {
         val c = contrast.coerceIn(0.25f, 3f)
-        val b = brightness.coerceIn(-100, 100).toFloat()
+        val thresholdOffset = (128 - threshold.coerceIn(0, 255)) * 0.6f
+        val b = (brightness.coerceIn(-100, 100) + thresholdOffset).coerceIn(-100f, 100f)
         val translate = (-0.5f * c + 0.5f) * 255f + b
         val matrix = ColorMatrix(
             floatArrayOf(

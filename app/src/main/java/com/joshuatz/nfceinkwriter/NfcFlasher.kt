@@ -155,6 +155,10 @@ class NfcFlasher : AppCompatActivity() {
         SystemBarUtils.applyStatusBarInset(findViewById(R.id.nfcAppBar))
         preferences = Preferences(this)
         syncArmed = savedInstanceState?.getBoolean("syncArmed") ?: false
+        if (preferRev22Transfer) {
+            Log.i(TAG, "Clearing prefer_rev22 — using official engine only")
+            preferRev22Transfer = false
+        }
 
         bindStatusViews()
         findViewById<MaterialToolbar>(R.id.nfc_toolbar).setNavigationOnClickListener {
@@ -165,9 +169,8 @@ class NfcFlasher : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btnRetrySync).setOnClickListener {
             postTransferActions?.visibility = View.GONE
             clearPanelMode = false
-            // Only skip cooldown after a failed sync. Re-syncing seconds after a success while
-            // the module is still refreshing (logs: stuck at 99% for 120s) always fails.
-            armSync(bypassCooldown = currentPhase == NfcTransferPhase.FAILED)
+            // User explicitly asked to sync again — never block behind post-success cooldown.
+            armSync(bypassCooldown = true)
         }
         findViewById<MaterialButton>(R.id.btnClearPanel).setOnClickListener {
             postTransferActions?.visibility = View.GONE
@@ -351,7 +354,8 @@ class NfcFlasher : AppCompatActivity() {
                 "Transfer interrupted — partial image on panel. " +
                     "Tap Clear panel, hold still until done, wait 90s, then sync your image.",
                 "Waveshare official",
-                retryable = true,
+                retryable = false,
+                suppressAutoRearm = true,
             )
         } catch (e: Exception) {
             Log.e(TAG, "Official transfer failed", e)
@@ -458,7 +462,8 @@ class NfcFlasher : AppCompatActivity() {
                 "Transfer interrupted — partial image on panel. " +
                     "Tap Clear panel, hold still until done, wait 90s, then sync your image.",
                 "Waveshare official",
-                retryable = true,
+                retryable = false,
+                suppressAutoRearm = true,
             )
         } catch (e: Exception) {
             Log.e(TAG, "Official transfer failed", e)
@@ -547,13 +552,10 @@ class NfcFlasher : AppCompatActivity() {
         )
 
         if (preferRev22Transfer) {
-            Log.i(TAG, "Trying Rev2.2 IsoDep protocol (previous official refresh stall)")
+            Log.i(TAG, "Trying Rev2.2 IsoDep protocol (alternate — experimental)")
             val rev22 = Rev22WaveshareDriver.transfer(tag, payload, expected, session, progress)
-            if (rev22.success) {
-                preferRev22Transfer = false
-                return rev22
-            }
-            Log.w(TAG, "Rev2.2 failed (${rev22.message}) — falling back to official engine")
+            preferRev22Transfer = false
+            return rev22
         }
 
         val official = OfficialWaveshareDriver.transferSync(
@@ -573,7 +575,8 @@ class NfcFlasher : AppCompatActivity() {
             },
         )
         if (official.refreshStalled) {
-            preferRev22Transfer = true
+            // Do not auto-switch to Rev22 — chaining protocols corrupts the panel.
+            Log.w(TAG, "Official refresh stalled at ${official.message}")
         } else if (official.success) {
             preferRev22Transfer = false
         }
@@ -759,6 +762,10 @@ class NfcFlasher : AppCompatActivity() {
         syncArmed = true
         autoRearmCount = 0
         postTransferActions?.visibility = View.GONE
+        preparedPayloadBitmap = null
+        mImgFileUri?.path?.let { path ->
+            mBitmap = BitmapFactory.decodeFile(path, BitmapFactory.Options())
+        }
         updateSyncArmedUi()
         prepareTransferPayload()
         if (NfcHelper.isEnabled(this)) {

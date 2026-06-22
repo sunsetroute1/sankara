@@ -83,20 +83,18 @@ abstract class GraphicEditorBase: AppCompatActivity() {
 
     private suspend fun getAndFlashGraphic() {
         val mContext = this
+        val preferences = Preferences(this)
         val imageBytes = this.getBitmapFromWebView(this.mWebView!!)
-        // Decode binary to bitmap
-        @Suppress("UNUSED_VARIABLE")
-        val bitmap: Bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-        // Save bitmap to file
+        val rawBitmap: Bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        val pixels = preferences.getScreenSizePixels()
+        val einkBitmap = EInkImageProcessor.processForDisplay(
+            rawBitmap, pixels.first, pixels.second, preferences.getColorMode(),
+        )
         withContext(Dispatchers.IO) {
             openFileOutput(GeneratedImageFilename, Context.MODE_PRIVATE).use { fileOutStream ->
-                fileOutStream.write(imageBytes)
+                einkBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutStream)
                 fileOutStream.close()
-                val navIntent = Intent(mContext, NfcFlasher::class.java)
-                val bundle = Bundle()
-                bundle.putString(IntentKeys.GeneratedImgPath, GeneratedImageFilename)
-                navIntent.putExtras(bundle)
-                startActivity(navIntent)
+                startActivity(Intent(mContext, ImagePreviewActivity::class.java))
             }
         }
     }

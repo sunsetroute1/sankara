@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+androguard.db
+androguard.db-shm
+androguard.db-wal

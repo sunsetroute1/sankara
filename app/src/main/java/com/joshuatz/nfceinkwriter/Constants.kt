@@ -15,9 +15,11 @@ val ScreenSizes = arrayOf(
     "7.5\" HD",
     "2.7\"",
     "2.9\" v.B",
+    "3.7\" INKZONE",
 )
 
-val DefaultScreenSize = ScreenSizes[1]
+// Waveshare 2.7" module (264×176) — Amazon B08B3RG439 / S26 Ultra prototype
+val DefaultScreenSize = ScreenSizes[5]
 
 val ScreenSizesInPixels = mapOf(
     // The true resolution for 2.13" is 250x122, but there is a (likely) typo in the SDK
@@ -29,6 +31,7 @@ val ScreenSizesInPixels = mapOf(
     "7.5\" HD" to Pair(880, 528),
     "2.7\"" to Pair(264, 176),
     "2.9\" v.B" to Pair(296, 128),
+    "3.7\" INKZONE" to Pair(240, 416),
 )
 
 object Constants {
@@ -38,12 +41,22 @@ object Constants {
 
 object PrefKeys {
     var DisplaySize = "Display_Size"
+    var ColorMode = "Color_Mode"
     var GeneratedImgPath = "Generated_Image_Path"
+    var NfcPromptEnableOnOpen = "Nfc_Prompt_Enable_On_Open"
+    var NfcPromptDisableOnClose = "Nfc_Prompt_Disable_On_Close"
+    var TagProfiles = "Tag_Profiles"
+    var DevicePassword = "Device_Password"
 }
+
+const val DefaultDevicePassword = "1234"
 
 object IntentKeys {
     var GeneratedImgPath = "$PackageName.imgUri"
     var GeneratedImgMime = "$PackageName.imgMime"
+    const val ArmSync = "$PackageName.armSync"
 }
 
 val GeneratedImageFilename = "generated.png"
+/** Full-resolution pick saved before user edits (crop, flip, etc.). */
+val PickedSourceFilename = "picked_source.png"

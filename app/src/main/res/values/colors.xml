@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Sankara / Burkina Faso revolutionary palette -->
+    <color name="sankara_red">#CE1126</color>
+    <color name="sankara_red_dark">#9E0D1E</color>
+    <color name="sankara_green">#009739</color>
+    <color name="sankara_green_dark">#006B28</color>
+    <color name="sankara_gold">#FCD116</color>
+    <color name="sankara_charcoal">#0F0F0F</color>
+    <color name="sankara_surface">#1A1A1A</color>
+    <color name="sankara_surface_elevated">#252525</color>
+    <color name="sankara_border">#3A3A3A</color>
+    <color name="sankara_text_primary">#F4F4EF</color>
+    <color name="sankara_text_secondary">#B8B8B0</color>
+    <color name="sankara_text_muted">#7A7A72</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="blue_darkest">#394855</color>
-    <color name="blue_dark">#007fc6</color>
-    <color name="blue_medium">#00b4ff</color>
-    <color name="blue_light">#d1f5ff</color>
-    <color name="tan_light">#ffeccc</color>
-    <color name="tan_dark">#8c7357</color>
-    <color name="tan_darkest">#703900</color>
+
+    <!-- E-ink output palettes (preview chips) -->
+    <color name="eink_red">#CC0000</color>
+    <color name="eink_yellow">#E6C200</color>
 </resources>

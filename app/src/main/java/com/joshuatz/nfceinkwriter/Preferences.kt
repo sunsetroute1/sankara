@@ -6,47 +6,88 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.joshuatz.nfceinkwriter.Constants.PreferenceKeys
 import com.joshuatz.nfceinkwriter.Constants.Preference_File_Key
+import com.joshuatz.nfceinkwriter.nfc.discovery.EInkTagProfile
+import com.joshuatz.nfceinkwriter.nfc.discovery.ProfileSource
+import org.json.JSONObject
 
-class Preferences {
-    private var mActivity: Activity
-    private var mAppContext: Context
+class Preferences(private val context: Context) {
 
-    constructor(activity: Activity) {
-        this.mActivity = activity
-        this.mAppContext = activity.applicationContext
+    fun getPreferences(): SharedPreferences =
+        context.getSharedPreferences(Preference_File_Key, Context.MODE_PRIVATE)
+
+    fun getScreenSize(): String =
+        getPreferences().getString(PreferenceKeys.DisplaySize, DefaultScreenSize) ?: DefaultScreenSize
+
+    fun getScreenSizeEnum(): Int =
+        ScreenSizes.indexOf(getScreenSize()) + 1
+
+    fun getScreenSizePixels(): Pair<Int, Int> =
+        ScreenSizesInPixels[getScreenSize()]!!
+
+    fun setScreenSize(size: String) {
+        getPreferences().edit().putString(PreferenceKeys.DisplaySize, size).apply()
     }
 
-    fun getPreferences(): SharedPreferences {
-        return this.mAppContext.getSharedPreferences(Preference_File_Key, Context.MODE_PRIVATE)
+    fun getColorMode(): EInkColorMode =
+        EInkColorMode.fromPref(getPreferences().getString(PreferenceKeys.ColorMode, EInkColorMode.DEFAULT.prefValue))
+
+    fun setColorMode(mode: EInkColorMode) {
+        getPreferences().edit().putString(PreferenceKeys.ColorMode, mode.prefValue).apply()
     }
 
-    fun getScreenSize(): String {
-        val screenSize = this.getPreferences().getString(PreferenceKeys.DisplaySize, DefaultScreenSize)
-        return screenSize ?: DefaultScreenSize
+    fun getNfcPromptEnableOnOpen(): Boolean =
+        getPreferences().getBoolean(PreferenceKeys.NfcPromptEnableOnOpen, true)
+
+    fun setNfcPromptEnableOnOpen(enabled: Boolean) {
+        getPreferences().edit().putBoolean(PreferenceKeys.NfcPromptEnableOnOpen, enabled).apply()
     }
 
-    fun getScreenSizeEnum(): Int {
-        val screenSize: String = this.getPreferences().getString(PreferenceKeys.DisplaySize, DefaultScreenSize)!!
-        return (ScreenSizes.indexOf(screenSize) + 1)
+    fun getNfcPromptDisableOnClose(): Boolean =
+        getPreferences().getBoolean(PreferenceKeys.NfcPromptDisableOnClose, false)
+
+    fun setNfcPromptDisableOnClose(enabled: Boolean) {
+        getPreferences().edit().putBoolean(PreferenceKeys.NfcPromptDisableOnClose, enabled).apply()
     }
 
-    fun getScreenSizePixels(): Pair<Int, Int> {
-        val screenSize: String = this.getPreferences().getString(PreferenceKeys.DisplaySize, DefaultScreenSize)!!
-        return ScreenSizesInPixels[screenSize]!!
+    fun getDevicePassword(): String =
+        getPreferences().getString(PreferenceKeys.DevicePassword, DefaultDevicePassword)
+            ?: DefaultDevicePassword
+
+    fun setDevicePassword(password: String) {
+        getPreferences().edit().putString(PreferenceKeys.DevicePassword, password).apply()
     }
 
-    fun showScreenSizePicker(callback: (String) -> Void?) {
-        val alertBuilder = AlertDialog.Builder(this.mActivity)
-        alertBuilder
-            .setTitle("Pick Your Screen Size")
+    fun showScreenSizePicker(activity: Activity, callback: (String) -> Unit) {
+        AlertDialog.Builder(activity, R.style.Theme_Sankara)
+            .setTitle(R.string.settings_display_size)
             .setItems(ScreenSizes) { _, which ->
-                val selectedSize = ScreenSizes[which]
-                with(this.getPreferences().edit()) {
-                    putString(PreferenceKeys.DisplaySize, selectedSize)
-                    apply()
-                }
-                callback(selectedSize)
+                val selected = ScreenSizes[which]
+                setScreenSize(selected)
+                callback(selected)
             }
-        alertBuilder.show()
+            .show()
     }
+
+    fun getCachedTagProfile(uidHex: String): EInkTagProfile? {
+        val json = getPreferences().getString(profileKey(uidHex), null) ?: return null
+        return try {
+            EInkTagProfile.fromJson(JSONObject(json))
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    fun cacheTagProfile(uidHex: String, profile: EInkTagProfile) {
+        val cached = profile.copy(source = ProfileSource.CACHED)
+        getPreferences().edit()
+            .putString(profileKey(uidHex), cached.toJson().toString())
+            .apply()
+    }
+
+    fun applyProfileAsDefaults(profile: EInkTagProfile) {
+        profile.screenSizeKey?.let { setScreenSize(it) }
+        profile.colorMode?.let { setColorMode(it) }
+    }
+
+    private fun profileKey(uidHex: String) = "${PreferenceKeys.TagProfiles}_$uidHex"
 }

@@ -185,6 +185,20 @@ class MainActivity : AppCompatActivity() {
 
             .setOnClickListener { startActivity(Intent(this, CardStudioActivity::class.java)) }
 
+        handleIncomingIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIncomingIntent(intent)
+    }
+
+    private fun handleIncomingIntent(intent: Intent?) {
+        if (!ImageImportHelper.isShareIntent(intent)) return
+        val uri = ImageImportHelper.extractShareUri(intent) ?: return
+        importAndEditImage(uri, autoCrop = true, fromShare = true)
+        setIntent(Intent(this, MainActivity::class.java))
     }
 
 
@@ -224,71 +238,45 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun processPickedImage(uri: Uri) {
+        importAndEditImage(uri, autoCrop = true, fromShare = false)
+    }
 
+    private fun importAndEditImage(uri: Uri, autoCrop: Boolean, fromShare: Boolean) {
         lifecycleScope.launch {
-
             try {
-
-                val decoded = withContext(Dispatchers.IO) {
-
-                    contentResolver.openInputStream(uri)?.use { stream ->
-
-                        BitmapFactory.decodeStream(stream)
-
-                    }
-
-                }
-
-                if (decoded == null) {
-
+                val ok = ImageImportHelper.saveUriToPickSource(this@MainActivity, uri)
+                if (!ok) {
                     Toast.makeText(
-
                         this@MainActivity,
-
-                        getString(R.string.crop_failed, "could not read image"),
-
+                        getString(R.string.share_image_failed, "could not read image"),
                         Toast.LENGTH_LONG,
-
                     ).show()
-
                     return@launch
-
                 }
-
-                val software = BitmapUtils.toSoftwareBitmap(decoded) ?: decoded
-
-                val bounded = BitmapUtils.downscaleToMax(software, 2048)
-
-                withContext(Dispatchers.IO) {
-
-                    openFileOutput(PickedSourceFilename, Context.MODE_PRIVATE).use { out ->
-
-                        bounded.compress(Bitmap.CompressFormat.PNG, 100, out)
-
-                    }
-
+                if (fromShare) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        R.string.share_image_received,
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 }
-
-                editLauncher.launch(Intent(this@MainActivity, ImageEditActivity::class.java))
-
+                editLauncher.launch(
+                    Intent(this@MainActivity, ImageEditActivity::class.java).apply {
+                        if (autoCrop) putExtra(ImageEditActivity.EXTRA_AUTO_CROP, true)
+                    },
+                )
             } catch (e: Exception) {
-
-                Log.e("MainActivity", "Image pick failed", e)
-
+                Log.e("MainActivity", "Image import failed", e)
                 Toast.makeText(
-
                     this@MainActivity,
-
-                    getString(R.string.crop_failed, e.message ?: "unknown"),
-
+                    getString(
+                        if (fromShare) R.string.share_image_failed else R.string.crop_failed,
+                        e.message ?: "unknown",
+                    ),
                     Toast.LENGTH_LONG,
-
                 ).show()
-
             }
-
         }
-
     }
 
 

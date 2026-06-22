@@ -89,6 +89,10 @@ class ImageEditActivity : AppCompatActivity() {
         sourceBitmap = BitmapUtils.toSoftwareBitmap(loaded)
         setupControls()
         schedulePreview(immediate = true)
+
+        if (intent.getBooleanExtra(EXTRA_AUTO_CROP, false)) {
+            previewView.post { launchCrop() }
+        }
     }
 
     private fun setupControls() {
@@ -114,9 +118,11 @@ class ImageEditActivity : AppCompatActivity() {
             schedulePreview(immediate = true)
         }
         findViewById<Chip>(R.id.chipReset).setOnClickListener { resetAll() }
+        findViewById<Chip>(R.id.chipEinkEnhance).setOnClickListener { applyEinkEnhance() }
 
         val contrastSlider = findViewById<Slider>(R.id.sliderContrast)
         val brightnessSlider = findViewById<Slider>(R.id.sliderBrightness)
+        val thresholdSlider = findViewById<Slider>(R.id.sliderThreshold)
         contrastSlider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
                 editParams.contrast = value
@@ -126,6 +132,12 @@ class ImageEditActivity : AppCompatActivity() {
         brightnessSlider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
                 editParams.brightness = value.toInt()
+                schedulePreview(immediate = false)
+            }
+        }
+        thresholdSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                editParams.threshold = value.toInt()
                 schedulePreview(immediate = false)
             }
         }
@@ -186,9 +198,19 @@ class ImageEditActivity : AppCompatActivity() {
         editParams.rotationQuarterTurns = 0
         editParams.contrast = 1f
         editParams.brightness = 0
+        editParams.threshold = 128
         syncChipState()
         findViewById<Slider>(R.id.sliderContrast).value = 1f
         findViewById<Slider>(R.id.sliderBrightness).value = 0f
+        findViewById<Slider>(R.id.sliderThreshold).value = 128f
+    }
+
+    private fun applyEinkEnhance() {
+        editParams.applyEinkEnhancePreset()
+        findViewById<Slider>(R.id.sliderContrast).value = editParams.contrast
+        findViewById<Slider>(R.id.sliderBrightness).value = editParams.brightness.toFloat()
+        findViewById<Slider>(R.id.sliderThreshold).value = editParams.threshold.toFloat()
+        schedulePreview(immediate = true)
     }
 
     private fun resetAll() {
@@ -297,6 +319,7 @@ class ImageEditActivity : AppCompatActivity() {
 
     companion object {
         const val RESULT_PICK_AGAIN = 2
+        const val EXTRA_AUTO_CROP = "com.sankara.app.extra.AUTO_CROP"
         private const val CropTempFilename = "edit_crop_source.png"
         private const val SLIDER_DEBOUNCE_MS = 120L
     }

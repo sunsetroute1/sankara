@@ -33,6 +33,10 @@ class SettingsActivity : AppCompatActivity() {
 
         showRandomQuote()
 
+        findViewById<androidx.cardview.widget.CardView>(R.id.quoteCard).setOnClickListener {
+            showRandomQuote()
+        }
+
         findViewById<MaterialButton>(R.id.btn_open_discovery).setOnClickListener {
             startActivity(Intent(this, DisplayDiscoveryActivity::class.java))
         }
@@ -125,6 +129,8 @@ class SettingsActivity : AppCompatActivity() {
     private fun showRandomQuote() {
         val quote = SankaraQuotes.randomQuote(this)
         findViewById<TextView>(R.id.sankaraQuoteText).text = "\u201C${quote.english}\u201D"
+        findViewById<TextView>(R.id.sankaraQuoteAuthor).text =
+            getString(R.string.settings_quote_attribution, quote.author)
     }
 
     private fun updateNotificationStatus() {

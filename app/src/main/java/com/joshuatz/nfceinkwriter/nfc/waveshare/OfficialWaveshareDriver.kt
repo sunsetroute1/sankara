@@ -10,6 +10,7 @@ import android.util.Log
 import com.joshuatz.nfceinkwriter.nfc.EInkFlashResult
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 
 /**
@@ -30,16 +31,10 @@ object OfficialWaveshareDriver {
      */
     private const val ENGINE_SILENT_ABORT_MS = 12_000L
     /**
-     * Progress at/above this means upload finished and the module is physically refreshing
-     * (engine parks at 99). The stock app holds NFC for 7+ minutes here — never abort from
-     * the watchdog during refresh; only v() returning or TagLost should end the hold.
+     * Official k() parks at 99 while polling refresh. Do NOT close IsoDep during refresh —
+     * cutting NFC mid-refresh garbles the panel (observed on S26 Ultra + 2.7" module).
      */
     private const val REFRESH_PHASE_PROGRESS = 90
-    /**
-     * Official k() parks at 99 while polling refresh. Logs: 6+ minutes stuck until the user
-     * lifted the phone. Rev22 poll times out at ~30s — abort earlier so the UI can recover.
-     */
-    private const val REFRESH_STALL_ABORT_MS = 45_000L
     /** v()=0 failures are frequently transient (observed: fail at 19:42:18, clean success at
      * 19:42:25 on the same hold). Retry while the user is still holding instead of bailing.
      */
@@ -121,6 +116,7 @@ object OfficialWaveshareDriver {
         var progressThread: Thread? = null
         val holdStartMs = SystemClock.elapsedRealtime()
         val refreshStalled = AtomicBoolean(false)
+        val peakEngineProgress = AtomicInteger(0)
         activeIsoDep.set(isoDep)
         return try {
             val engine = OfficialWaveshareBridge.createEngine(context, panelType)
@@ -185,6 +181,9 @@ object OfficialWaveshareDriver {
                 while (!Thread.currentThread().isInterrupted) {
                     val now = SystemClock.elapsedRealtime()
                     val engineProgress = OfficialWaveshareBridge.progress(engine)
+                    if (engineProgress in 1..100) {
+                        peakEngineProgress.updateAndGet { maxOf(it, engineProgress) }
+                    }
                     if (engineProgress != lastSeen) {
                         lastSeen = engineProgress
                         lastChangeMs = now
@@ -206,21 +205,12 @@ object OfficialWaveshareDriver {
                         }
                         break
                     }
+                    // Never close IsoDep during refresh — hold NFC until v() returns or user cancels.
                     if (engineProgress >= REFRESH_PHASE_PROGRESS &&
                         engineProgress < 100 &&
-                        now - lastChangeMs > REFRESH_STALL_ABORT_MS
+                        now - lastChangeMs > 15_000L
                     ) {
                         refreshStalled.set(true)
-                        Log.w(
-                            TAG,
-                            "Refresh poll stuck at progress=$engineProgress for " +
-                                "${now - lastChangeMs}ms — closing IsoDep to abort v()",
-                        )
-                        try {
-                            isoDep.close()
-                        } catch (_: Exception) {
-                        }
-                        break
                     }
                     val reported = if (engineProgress in 1..100) {
                         engineProgress
@@ -286,7 +276,12 @@ object OfficialWaveshareDriver {
                     AttemptOutcome(
                         EInkFlashResult(
                             false,
-                            "Display refresh did not finish — keep holding the phone on the module longer and try again.",
+                            if (finalProgress >= REFRESH_PHASE_PROGRESS) {
+                                "Upload finished but refresh did not confirm — keep holding the phone " +
+                                    "on the module until Done, or tap Clear panel and try again."
+                            } else {
+                                "Display refresh did not finish — keep holding the phone on the module longer and try again."
+                            },
                             "Waveshare official",
                             refreshStalled = finalProgress >= REFRESH_PHASE_PROGRESS,
                             suppressAutoRearm = true,
@@ -308,14 +303,14 @@ object OfficialWaveshareDriver {
                     val tagDead = !isoDep.isConnected ||
                         (afterTransferProgress < 0 && totalMs > 5_000L)
                     val stalled = refreshStalled.get() ||
-                        (afterTransferProgress >= REFRESH_PHASE_PROGRESS && totalMs > REFRESH_STALL_ABORT_MS)
+                        peakEngineProgress.get() >= REFRESH_PHASE_PROGRESS
                     AttemptOutcome(
                         EInkFlashResult(
                             false,
                             when {
-                                stalled ->
-                                    "Refresh poll stuck at 99% — lift the phone away, wait 90 seconds, " +
-                                        "then tap Sync again (will try alternate protocol)."
+                                stalled && peakEngineProgress.get() >= REFRESH_PHASE_PROGRESS ->
+                                    "Upload likely finished at ${peakEngineProgress.get()}% but refresh " +
+                                        "was interrupted — tap Clear panel, wait 90s, then sync again."
                                 tagDead ->
                                     "Transfer interrupted — partial image on panel. " +
                                         "Tap Clear panel, hold still until Done, wait 90s, then sync your image."
@@ -324,11 +319,11 @@ object OfficialWaveshareDriver {
                                         "Wait 60–90 seconds, hold the phone flat on the coil, then tap Try again."
                             },
                             "Waveshare official",
-                            retryable = !stalled,
+                            retryable = !stalled && !tagDead,
                             refreshStalled = stalled,
-                            suppressAutoRearm = stalled || totalMs > 60_000L,
+                            suppressAutoRearm = stalled || tagDead || totalMs > 60_000L,
                         ),
-                        retryable = !stalled,
+                        retryable = !stalled && !tagDead,
                         handleDead = tagDead || stalled,
                     )
                 }
@@ -341,9 +336,10 @@ object OfficialWaveshareDriver {
                     "Transfer interrupted — partial image on panel. " +
                         "Tap Clear panel, hold still until done, wait 90s, then sync your image.",
                     "Waveshare official",
-                    retryable = true,
+                    retryable = false,
+                    suppressAutoRearm = true,
                 ),
-                retryable = true,
+                retryable = false,
                 handleDead = true,
             )
         } catch (e: Exception) {

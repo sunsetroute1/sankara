@@ -33,8 +33,9 @@
     <string name="card_hint_link_extra">Another link (optional)</string>
 
     <string name="settings_title">Settings</string>
-    <string name="settings_quote_label">SANKARA</string>
-    <string name="settings_quote_attribution">— Thomas Sankara</string>
+    <string name="settings_quote_label">PAN-AFRICAN WISDOM</string>
+    <string name="settings_quote_attribution">— %1$s</string>
+    <string name="settings_quote_tap_hint">Tap for another quote</string>
     <string name="settings_bg_content_description">Thomas Sankara portrait background</string>
     <string name="settings_display_section">Display hardware</string>
     <string name="settings_display_size">Panel size</string>
@@ -128,6 +129,11 @@
     <string name="image_edit_reset">Reset</string>
     <string name="image_edit_contrast">Contrast</string>
     <string name="image_edit_brightness">Brightness</string>
+    <string name="image_edit_threshold">Black / white threshold</string>
+    <string name="image_edit_eink_enhance">E-ink enhance</string>
+    <string name="share_image_received">Image received — crop and adjust for your panel</string>
+    <string name="share_image_failed">Could not open shared image: %1$s</string>
+    <string name="share_receive_hint">Or share an image to Sankara from Quick Share, Nearby Share, or AirDrop (Android 17+)</string>
     <string name="image_edit_crop_cancelled">Crop cancelled</string>
     <string name="image_edit_crop_done">Done</string>
 

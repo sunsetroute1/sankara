@@ -5,10 +5,14 @@ import org.json.JSONArray
 import java.io.BufferedReader
 
 /**
- * Cached Thomas Sankara quotes (English, with French originals in assets).
+ * Pan-African liberation quotes with attributed authors (assets).
  */
 object SankaraQuotes {
-    data class Quote(val english: String, val french: String)
+    data class Quote(
+        val english: String,
+        val french: String,
+        val author: String,
+    )
 
     @Volatile
     private var cache: List<Quote>? = null
@@ -30,11 +34,17 @@ object SankaraQuotes {
 
     private fun readFromAssets(context: Context): List<Quote> {
         return try {
-            context.assets.open("sankara_quotes.json").bufferedReader().use { reader ->
+            context.assets.open("pan_african_quotes.json").bufferedReader().use { reader ->
                 parseJson(reader)
             }
         } catch (_: Exception) {
-            fallbackQuotes()
+            try {
+                context.assets.open("sankara_quotes.json").bufferedReader().use { reader ->
+                    parseJson(reader)
+                }
+            } catch (_: Exception) {
+                fallbackQuotes()
+            }
         }
     }
 
@@ -45,8 +55,9 @@ object SankaraQuotes {
             val item = json.getJSONObject(i)
             val en = item.optString("en").trim()
             val fr = item.optString("fr").trim()
+            val author = item.optString("author", "Thomas Sankara").trim()
             if (en.isNotEmpty()) {
-                list.add(Quote(en, fr))
+                list.add(Quote(en, fr, author.ifEmpty { "Unknown" }))
             }
         }
         return if (list.isEmpty()) fallbackQuotes() else list
@@ -56,14 +67,17 @@ object SankaraQuotes {
         Quote(
             "Homeland or death, we shall overcome.",
             "Patrie ou mort, nous vaincrons.",
+            "Thomas Sankara",
         ),
         Quote(
             "We must dare to invent the future.",
             "Il faut oser inventer l'avenir.",
+            "Thomas Sankara",
         ),
         Quote(
-            "He who feeds you, controls you.",
-            "Celui qui te nourrit, te contrôle.",
+            "Freedom is a constant struggle.",
+            "",
+            "Angela Davis",
         ),
     )
 }

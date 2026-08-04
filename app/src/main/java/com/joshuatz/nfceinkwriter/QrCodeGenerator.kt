@@ -10,12 +10,23 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 /** Crisp black/white QR bitmaps + standard payload builders. No network needed. */
 object QrCodeGenerator {
 
-    fun generate(content: String, size: Int): Bitmap? {
+    /** Pick lowest EC that fits — larger payloads need L for e-ink QR capacity. */
+    fun generateBestEffort(content: String, size: Int): Bitmap? {
+        for (ec in listOf(ErrorCorrectionLevel.M, ErrorCorrectionLevel.L)) {
+            generate(content, size, ec)?.let { return it }
+        }
+        return null
+    }
+
+    fun generate(content: String, size: Int): Bitmap? =
+        generate(content, size, ErrorCorrectionLevel.M)
+
+    fun generate(content: String, size: Int, errorCorrection: ErrorCorrectionLevel): Bitmap? {
         if (content.isBlank() || size <= 0) return null
         return try {
             val hints = mapOf(
                 EncodeHintType.MARGIN to 1,
-                EncodeHintType.ERROR_CORRECTION to ErrorCorrectionLevel.M,
+                EncodeHintType.ERROR_CORRECTION to errorCorrection,
                 EncodeHintType.CHARACTER_SET to "UTF-8",
             )
             val matrix = QRCodeWriter().encode(content, BarcodeFormat.QR_CODE, size, size, hints)

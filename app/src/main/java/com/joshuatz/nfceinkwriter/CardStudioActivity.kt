@@ -467,7 +467,11 @@ class CardStudioActivity : ThemedActivity() {
                     eink.recycle()
                 }
                 LastGeneratedImage.markSaved(this@CardStudioActivity)
-                startActivity(Intent(this@CardStudioActivity, NfcFlasher::class.java))
+                startActivity(
+                    Intent(this@CardStudioActivity, NfcFlasher::class.java).apply {
+                        putExtra(IntentKeys.ArmSync, true)
+                    },
+                )
             } catch (e: Exception) {
                 Toast.makeText(
                     this@CardStudioActivity,

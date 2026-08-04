@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appBackground">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/trailTagPublicAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/trail_tag_public_toolbar"
+            style="@style/Widget.Sankara.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@android:drawable/ic_menu_revert"
+            app:title="@string/trail_tag_public_title" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/trailTagPublicScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/sankara_space_xl">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_lg"
+                android:text="@string/trail_tag_public_placeholder_note"
+                android:textAppearance="@style/TextAppearance.Sankara.Caption" />
+
+            <TextView
+                android:id="@+id/publicStatusBadge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_sm"
+                android:textAppearance="@style/TextAppearance.Sankara.Title"
+                tools:text="Active" />
+
+            <TextView
+                android:id="@+id/publicOverdueWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_md"
+                android:textAppearance="@style/TextAppearance.Sankara.Body"
+                android:textColor="?attr/colorSecondary"
+                android:visibility="gone"
+                tools:text="Possibly overdue — expected return was 2 hours ago" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/trail_tag_public_section_person"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/publicPersonName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:textAppearance="@style/TextAppearance.Sankara.Body"
+                tools:text="Morgan" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/trail_tag_public_section_adventure"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/publicAdventureDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:textAppearance="@style/TextAppearance.Sankara.Body"
+                tools:text="Trail Run · Dale Ball Trails" />
+
+            <TextView
+                android:id="@+id/publicAdventureTimes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="@style/TextAppearance.Sankara.Caption"
+                tools:text="Start 7:42 AM · Return 11:30 AM" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/trail_tag_public_section_emergency"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/publicEmergencyInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:textAppearance="@style/TextAppearance.Sankara.Body"
+                tools:text="Contact: Alex · 555-0100" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/trail_tag_public_section_tracking"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/publicTrackingLinks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:textAppearance="@style/TextAppearance.Sankara.Body"
+                tools:text="Garmin LiveTrack (configured)" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/trail_tag_public_section_qr"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/publicQrUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:layout_marginBottom="@dimen/sankara_space_xxl"
+                android:textAppearance="@style/TextAppearance.Sankara.Caption"
+                tools:text="https://sankara.app/trailtag/abc-123" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

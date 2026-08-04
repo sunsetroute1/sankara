@@ -203,6 +203,9 @@ class MainActivity : ThemedActivity() {
 
             .setOnClickListener { startActivity(Intent(this, CardStudioActivity::class.java)) }
 
+        findViewById<MaterialButton>(R.id.cta_trail_tag)
+            .setOnClickListener { startActivity(Intent(this, TrailTagActivity::class.java)) }
+
         handleIncomingIntent(intent)
     }
 

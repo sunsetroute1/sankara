@@ -2,6 +2,7 @@ package com.joshuatz.nfceinkwriter.nfc.waveshare
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.util.Log
 import com.joshuatz.nfceinkwriter.BitmapUtils
 import com.joshuatz.nfceinkwriter.PanelTestPattern
 
@@ -10,6 +11,8 @@ import com.joshuatz.nfceinkwriter.PanelTestPattern
  * @see https://www.waveshare.com/wiki/Android_SDK_for_NFC-Powered_e-Paper
  */
 object WaveshareBitmapPrep {
+
+    private const val TAG = "WaveshareBitmapPrep"
 
     /** Full white frame — use to force a clean panel before a real image after partial transfers. */
     fun blankPanel(width: Int, height: Int): Bitmap = solidPanel(width, height, Color.WHITE)
@@ -55,7 +58,7 @@ object WaveshareBitmapPrep {
 
     fun prepare(bitmap: Bitmap, width: Int, height: Int): Bitmap {
         val sized = sizeToPanel(bitmap, width, height)
-        return toStrictMonochrome(sized)
+        return snapToStrictMonochrome(sized)
     }
 
     /**
@@ -64,16 +67,23 @@ object WaveshareBitmapPrep {
      */
     fun prepareForOfficial(bitmap: Bitmap, width: Int, height: Int): Bitmap {
         val sized = sizeToPanel(bitmap, width, height)
-        // Editor / preview path already dithers to panel pixels — re-running Floyd–Steinberg
-        // smears the pattern and can drop user edits (e.g. invert) when jobs race.
-        if (sized.width == width && sized.height == height && looksPreDithered(sized)) {
-            return toStrictMonochrome(sized)
+        if (sized.width == width && sized.height == height) {
+            // Editor / Card Studio already outputs panel pixels. Re-running Floyd–Steinberg on a
+            // halftone (or on 3/4-color palette pixels) smears the pattern and can invert tones.
+            return if (looksStrictMonochrome(sized)) {
+                Log.d(TAG, "Panel-sized strict B/W — preserving editor halftone")
+                copyStrictMonochrome(sized)
+            } else {
+                Log.d(TAG, "Panel-sized palette/gray — snapping to B/W without re-dither")
+                snapToStrictMonochrome(sized)
+            }
         }
+        Log.d(TAG, "Non-panel source ${sized.width}x${sized.height} → Floyd–Steinberg")
         return floydSteinbergMonochrome(sized)
     }
 
-    /** True when pixels are already thresholded (typical editor/NFC payload output). */
-    private fun looksPreDithered(source: Bitmap): Boolean {
+    /** True when sampled pixels are already strict black/white (typical B/W editor output). */
+    private fun looksStrictMonochrome(source: Bitmap): Boolean {
         val w = source.width
         val h = source.height
         if (w <= 0 || h <= 0) return false
@@ -98,6 +108,39 @@ object WaveshareBitmapPrep {
         } else {
             BitmapUtils.centerCropAndScale(bitmap, width, height)
         }
+    }
+
+    /** Per-pixel luminance threshold — no error diffusion (safe for already-dithered input). */
+    private fun snapToStrictMonochrome(source: Bitmap): Bitmap {
+        val w = source.width
+        val h = source.height
+        val pixels = IntArray(w * h)
+        source.getPixels(pixels, 0, w, 0, 0, w, h)
+        for (i in pixels.indices) {
+            pixels[i] = monochromeFromArgb(pixels[i])
+        }
+        return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also {
+            it.setPixels(pixels, 0, w, 0, 0, w, h)
+        }
+    }
+
+    /** Preserve halftone bit pattern from editor output; only normalize to #000 / #FFF. */
+    private fun copyStrictMonochrome(source: Bitmap): Bitmap {
+        val w = source.width
+        val h = source.height
+        val pixels = IntArray(w * h)
+        source.getPixels(pixels, 0, w, 0, 0, w, h)
+        for (i in pixels.indices) {
+            pixels[i] = if (Color.red(pixels[i]) >= 128) Color.WHITE else Color.BLACK
+        }
+        return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also {
+            it.setPixels(pixels, 0, w, 0, 0, w, h)
+        }
+    }
+
+    private fun monochromeFromArgb(color: Int): Int {
+        val lum = Color.red(color) * 0.299f + Color.green(color) * 0.587f + Color.blue(color) * 0.114f
+        return if (lum >= 128f) Color.WHITE else Color.BLACK
     }
 
     private fun floydSteinbergMonochrome(source: Bitmap): Bitmap {
@@ -130,15 +173,17 @@ object WaveshareBitmapPrep {
         }
     }
 
-    private fun toStrictMonochrome(source: Bitmap): Bitmap {
+    /**
+     * The bundled official dex engine ([activity.a.v] / [activity.a.r]) encodes with opposite
+     * B/W polarity from our editor preview — swap tones so the panel matches the phone.
+     */
+    fun invertForOfficialEngine(source: Bitmap): Bitmap {
         val w = source.width
         val h = source.height
         val pixels = IntArray(w * h)
         source.getPixels(pixels, 0, w, 0, 0, w, h)
         for (i in pixels.indices) {
-            val c = pixels[i]
-            val lum = Color.red(c) * 0.299f + Color.green(c) * 0.587f + Color.blue(c) * 0.114f
-            pixels[i] = if (lum >= 128f) Color.WHITE else Color.BLACK
+            pixels[i] = if (Color.red(pixels[i]) >= 128) Color.BLACK else Color.WHITE
         }
         return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also {
             it.setPixels(pixels, 0, w, 0, 0, w, h)

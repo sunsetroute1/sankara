@@ -347,8 +347,14 @@ class ImageEditActivity : ThemedActivity() {
 
         lifecycleScope.launch {
             try {
+                val sourceSnapshot = sourceBitmap
+                val paramsSnapshot = editParams.copy()
+                val (panelW, panelH) = prefs.getScreenSizePixels()
+                val colorMode = prefs.getColorMode()
                 val bitmap = withContext(Dispatchers.Default) {
-                    buildFinalEinkBitmap()
+                    if (sourceSnapshot == null) return@withContext null
+                    val transformed = BitmapEditor.apply(sourceSnapshot, paramsSnapshot)
+                    EInkImageProcessor.toEInkBitmap(transformed, panelW, panelH, colorMode)
                 }
                 if (bitmap == null) {
                     Toast.makeText(

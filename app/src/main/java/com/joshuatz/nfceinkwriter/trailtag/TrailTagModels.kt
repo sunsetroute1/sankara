@@ -118,6 +118,44 @@ data class TrackingLink(
     }
 }
 
+/** Adventurer reachability — SMS works with T-Satellite, Garmin inReach, and similar SOS services. */
+data class AdventurerComms(
+    val mobilePhone: String = "",
+    val satelliteCapable: Boolean = false,
+    val checkInSmsBody: String = DEFAULT_CHECKIN_SMS,
+    val inReachSmsNumber: String = "",
+    val inReachSmsBody: String = DEFAULT_INREACH_SMS,
+) {
+    fun hasAdventurerSms(): Boolean = mobilePhone.isNotBlank()
+
+    fun hasInReachSms(): Boolean = inReachSmsNumber.isNotBlank()
+
+    fun toJson(): JSONObject = JSONObject().apply {
+        put("mobilePhone", mobilePhone)
+        put("satelliteCapable", satelliteCapable)
+        put("checkInSmsBody", checkInSmsBody)
+        put("inReachSmsNumber", inReachSmsNumber)
+        put("inReachSmsBody", inReachSmsBody)
+    }
+
+    companion object {
+        const val DEFAULT_CHECKIN_SMS =
+            "TrailTag: Someone scanned your safety tag. Are you OK? Reply when you can."
+        const val DEFAULT_INREACH_SMS =
+            "TrailTag: Emergency contact tried to reach you via your safety tag."
+
+        fun fromJson(json: JSONObject?): AdventurerComms = AdventurerComms(
+            mobilePhone = json?.optString("mobilePhone").orEmpty(),
+            satelliteCapable = json?.optBoolean("satelliteCapable", false) == true,
+            checkInSmsBody = json?.optString("checkInSmsBody").orEmpty()
+                .ifBlank { DEFAULT_CHECKIN_SMS },
+            inReachSmsNumber = json?.optString("inReachSmsNumber").orEmpty(),
+            inReachSmsBody = json?.optString("inReachSmsBody").orEmpty()
+                .ifBlank { DEFAULT_INREACH_SMS },
+        )
+    }
+}
+
 data class VehicleInfo(
     val makeModel: String = "",
     val color: String = "",
@@ -145,6 +183,7 @@ data class TrailTagProfile(
     val id: String = UUID.randomUUID().toString(),
     val name: String = "",
     val photoUri: String? = null,
+    val comms: AdventurerComms = AdventurerComms(),
     val contacts: List<EmergencyContact> = emptyList(),
     val medical: MedicalInfo = MedicalInfo(),
     val trackingLinks: List<TrackingLink> = defaultTrackingSlots(),
@@ -169,6 +208,7 @@ data class TrailTagProfile(
         put("name", name)
         put("photoUri", photoUri ?: JSONObject.NULL)
         put("photoPath", photoUri ?: JSONObject.NULL) // legacy
+        put("comms", comms.toJson())
         put("contacts", JSONArray().apply { contacts.forEach { put(it.toJson()) } })
         put("medical", medical.toJson())
         put("trackingLinks", JSONArray().apply { trackingLinks.forEach { put(it.toJson()) } })
@@ -209,6 +249,7 @@ data class TrailTagProfile(
                 id = json.optString("id", UUID.randomUUID().toString()),
                 name = json.optString("name", ""),
                 photoUri = photo,
+                comms = AdventurerComms.fromJson(json.optJSONObject("comms")),
                 contacts = contacts.ifEmpty { listOf(EmergencyContact()) },
                 medical = MedicalInfo.fromJson(json.optJSONObject("medical") ?: JSONObject()),
                 trackingLinks = links.ifEmpty { defaultTrackingSlots() },

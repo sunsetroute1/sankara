@@ -1,6 +1,7 @@
 package com.joshuatz.nfceinkwriter.trailtag
 
 import android.content.Context
+import java.io.File
 
 /**
  * Unified TrailTag store — UI uses this facade only.
@@ -60,9 +61,8 @@ class TrailTagRepository(context: Context) {
 
     fun hostedPublishedAtMs(): Long = hosted.publishedAtMs()
 
-    fun regenerateLocalHtml() {
+    fun regenerateLocalHtml(): File =
         TrailTagHtmlGenerator.generate(appContext, getProfile(), getSession())
-    }
 
     fun localHtmlIndexFile() = TrailTagHtmlGenerator.indexFile(appContext)
 }

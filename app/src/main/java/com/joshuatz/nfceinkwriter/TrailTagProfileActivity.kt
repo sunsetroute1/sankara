@@ -5,6 +5,8 @@ import android.widget.Toast
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.joshuatz.nfceinkwriter.trailtag.AdventurerComms
 import com.joshuatz.nfceinkwriter.trailtag.EmergencyContact
 import com.joshuatz.nfceinkwriter.trailtag.MedicalInfo
 import com.joshuatz.nfceinkwriter.trailtag.TrackingLink
@@ -41,6 +43,10 @@ class TrailTagProfileActivity : ThemedActivity() {
 
     private fun bindProfile(profile: TrailTagProfile) {
         findViewById<TextInputEditText>(R.id.inputProfileName)?.setText(profile.name)
+        val comms = profile.comms
+        findViewById<TextInputEditText>(R.id.inputAdventurerPhone)?.setText(comms.mobilePhone)
+        findViewById<MaterialSwitch>(R.id.switchSatelliteCapable)?.isChecked = comms.satelliteCapable
+        findViewById<TextInputEditText>(R.id.inputInReachSms)?.setText(comms.inReachSmsNumber)
         val contact = profile.contacts.firstOrNull() ?: EmergencyContact()
         findViewById<TextInputEditText>(R.id.inputContactName)?.setText(contact.name)
         findViewById<TextInputEditText>(R.id.inputContactPrimary)?.setText(contact.primaryPhone)
@@ -73,6 +79,13 @@ class TrailTagProfileActivity : ThemedActivity() {
         }
         val profile = existing.copy(
             name = findViewById<TextInputEditText>(R.id.inputProfileName)?.text?.toString().orEmpty().trim(),
+            comms = AdventurerComms(
+                mobilePhone = findViewById<TextInputEditText>(R.id.inputAdventurerPhone)?.text?.toString().orEmpty().trim(),
+                satelliteCapable = findViewById<MaterialSwitch>(R.id.switchSatelliteCapable)?.isChecked == true,
+                inReachSmsNumber = findViewById<TextInputEditText>(R.id.inputInReachSms)?.text?.toString().orEmpty().trim(),
+                checkInSmsBody = existing.comms.checkInSmsBody,
+                inReachSmsBody = existing.comms.inReachSmsBody,
+            ),
             contacts = listOf(contact),
             medical = MedicalInfo(
                 bloodType = findViewById<TextInputEditText>(R.id.inputBloodType)?.text?.toString().orEmpty().trim(),

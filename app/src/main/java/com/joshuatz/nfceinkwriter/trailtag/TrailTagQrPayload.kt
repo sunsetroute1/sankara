@@ -99,6 +99,16 @@ object TrailTagQrPayload {
                     if (p.medical.notes.isNotBlank()) put("n", p.medical.notes.take(80))
                 })
             }
+            val comms = p.comms
+            if (comms.hasAdventurerSms() || comms.hasInReachSms() || comms.satelliteCapable) {
+                put("comms", JSONObject().apply {
+                    if (comms.mobilePhone.isNotBlank()) put("m", comms.mobilePhone)
+                    if (comms.satelliteCapable) put("sat", true)
+                    if (comms.checkInSmsBody.isNotBlank()) put("sms", comms.checkInSmsBody.take(100))
+                    if (comms.inReachSmsNumber.isNotBlank()) put("ir", comms.inReachSmsNumber)
+                    if (comms.inReachSmsBody.isNotBlank()) put("irb", comms.inReachSmsBody.take(100))
+                })
+            }
         }
     }
 

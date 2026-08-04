@@ -56,6 +56,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/trail_tag_profile_section_comms"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_md"
+                android:hint="@string/trail_tag_field_adventurer_phone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputAdventurerPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switchSatelliteCapable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:text="@string/trail_tag_field_satellite_capable" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_inreach_sms">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputInReachSms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
                 android:text="@string/trail_tag_profile_section_emergency"
                 android:textAppearance="@style/TextAppearance.Sankara.Section"
                 android:textColor="?attr/colorPrimary" />

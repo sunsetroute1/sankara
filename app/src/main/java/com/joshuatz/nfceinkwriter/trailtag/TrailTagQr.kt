@@ -32,10 +32,7 @@ object TrailTagQr {
         return "${VIEWER_BASE_URL}?d=$token"
     }
 
-    /** Prefer hosted token URL when published; otherwise universal embedded payload. */
-    fun qrTarget(profile: TrailTagProfile, session: TrailTagSession?): String = when {
-        profile.isHosted() && !profile.hostedToken.isNullOrBlank() ->
-            hostedUrl(profile.hostedToken!!)
-        else -> universalUrl(profile, session)
-    }
+    /** Offline-first QR — self-contained HTML in data URI; online HTTPS fallback if too large. */
+    fun qrTarget(profile: TrailTagProfile, session: TrailTagSession?): String =
+        TrailTagOfflineQr.bestQrTarget(profile, session)
 }

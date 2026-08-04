@@ -320,7 +320,7 @@
     <string name="cta_trail_tag_short">TrailTag</string>
     <string name="cta_trail_tag">TrailTag — Outdoor Safety</string>
     <string name="trail_tag_title">TrailTag</string>
-    <string name="trail_tag_subtitle">Leave a physical last-known adventure marker on your e-ink tag. Anyone who scans the QR sees your safety profile in their browser — no app required.</string>
+    <string name="trail_tag_subtitle">Offline-first safety beacon for your e-ink tag. Each adventure update saves a local HTML profile — QR works with no signal; tracking links load when online.</string>
     <string name="trail_tag_status_section">Current status</string>
     <string name="trail_tag_template_section">E-ink template</string>
     <string name="trail_tag_preview_section">Panel preview</string>
@@ -425,5 +425,12 @@
     <string name="trail_tag_local_profile_missing">Generate a profile first</string>
     <string name="trail_tag_public_overdue_warning">⚠️ Possibly overdue — expected return was %1$d hours ago. Consider contacting emergency contacts.</string>
     <string name="trail_tag_qr_too_large">Safety profile is too large for the QR code. Shorten notes, medical info, or tracking links and try again.</string>
-    <string name="trail_tag_universal_qr_note">QR links open in any phone browser — no Sankara app required.</string>
+    <string name="trail_tag_universal_qr_note">QR embeds a full offline page — no internet needed to scan. Tracking links open when signal is available.</string>
+    <string name="trail_tag_profile_section_comms">Your phone &amp; satellite SMS</string>
+    <string name="trail_tag_field_adventurer_phone">Your mobile number (for T-Satellite / SMS)</string>
+    <string name="trail_tag_field_satellite_capable">Satellite SMS capable (T-Satellite, iPhone satellite, etc.)</string>
+    <string name="trail_tag_field_inreach_sms">Garmin inReach SMS number (optional)</string>
+    <string name="trail_tag_view_offline_profile">View offline profile</string>
+    <string name="trail_tag_share_html">Share HTML file</string>
+    <string name="trail_tag_share_subject">TrailTag safety profile — %1$s</string>
 </resources>

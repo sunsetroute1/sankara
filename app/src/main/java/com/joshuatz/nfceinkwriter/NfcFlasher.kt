@@ -280,7 +280,7 @@ class NfcFlasher : AppCompatActivity() {
         handleIncomingSyncIntent(intent)
     }
 
-    /** Reload generated.png and optionally arm — used when Card Studio / TrailTag push a fresh image. */
+    /** Reload generated.png and optionally arm — used when Card Studio pushes a fresh image. */
     private fun handleIncomingSyncIntent(intent: Intent?) {
         if (intent == null || isNfcTagIntent(intent)) return
         val shouldArm = intent.getBooleanExtra(IntentKeys.ArmSync, false)

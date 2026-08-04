@@ -328,16 +328,6 @@
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/cta_trail_tag"
-                style="@style/Widget.Sankara.Button.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/sankara_space_sm"
-                android:text="@string/cta_trail_tag"
-                app:icon="@android:drawable/ic_menu_compass"
-                app:iconGravity="textStart" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cta_new_text"
                 style="@style/Widget.Sankara.Button.Outlined"
                 android:layout_width="match_parent"

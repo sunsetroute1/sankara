@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appBackground">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/trailTagProfileAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/trail_tag_profile_toolbar"
+            style="@style/Widget.Sankara.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@android:drawable/ic_menu_revert"
+            app:title="@string/trail_tag_profile_title" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/trailTagProfileScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/sankara_space_xl">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/trail_tag_profile_section_person"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_md"
+                android:hint="@string/trail_tag_field_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputProfileName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/trail_tag_profile_section_emergency"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_md"
+                android:hint="@string/trail_tag_field_contact_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputContactName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_contact_primary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputContactPrimary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_contact_secondary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputContactSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/trail_tag_profile_section_medical"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_md"
+                android:hint="@string/trail_tag_field_blood_type">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputBloodType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_allergies">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputAllergies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_medical_notes">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputMedicalNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:minLines="2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/trail_tag_profile_section_tracking"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_md"
+                android:hint="@string/trail_tag_field_garmin_inreach">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputGarminInreach"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_garmin_livetrack">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputGarminLivetrack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_strava_beacon">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputStravaBeacon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_google_maps">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputGoogleMaps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_custom_tracking">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputOtherTracking"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/trail_tag_profile_section_vehicle"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_md"
+                android:hint="@string/trail_tag_field_vehicle_make">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputVehicleMake"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:hint="@string/trail_tag_field_vehicle_color">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputVehicleColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_sm"
+                android:layout_marginBottom="@dimen/sankara_space_xl"
+                android:hint="@string/trail_tag_field_vehicle_plate">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputVehiclePlate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_md"
+                android:text="@string/trail_tag_privacy_local_note"
+                android:textAppearance="@style/TextAppearance.Sankara.Caption" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSaveProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_xxl"
+                android:text="@string/trail_tag_save_profile" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>TrailTag Safety Profile</title>
+<style>
+:root{--green:#2e7d32;--yellow:#e65100;--red:#c62828;--accent:#ce1126;--bg:#f7f7f7;--card:#fff;--text:#1a1a1a;--muted:#555}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding:16px;max-width:480px;margin:0 auto}
+.bar{height:4px;background:var(--accent);border-radius:2px;margin-bottom:20px}
+.badge{display:inline-block;padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;margin-bottom:16px}
+.badge.active{background:#e8f5e9;color:var(--green)}
+.badge.past_return,.badge.past-return{background:#fff8e1;color:var(--yellow)}
+.badge.emergency{background:#ffebee;color:var(--red)}
+.badge.needs_update,.badge.needs-update,.badge.none{background:#eceff1;color:#546e7a}
+.card{background:var(--card);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+h1{font-size:24px;margin-bottom:4px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:10px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #eee;font-size:15px}
+.row:last-child{border-bottom:none}
+.label{color:var(--muted);flex-shrink:0}
+a.btn{display:block;background:var(--accent);color:#fff;text-align:center;padding:14px;border-radius:10px;text-decoration:none;font-weight:600;margin-top:10px;font-size:16px}
+a.link{color:var(--accent);word-break:break-all}
+.warn{background:#fff3e0;border-left:4px solid #f9a825;padding:14px;border-radius:6px;margin-bottom:16px;font-size:15px}
+.err{padding:24px;text-align:center;color:var(--red)}
+.footer{font-size:12px;color:var(--muted);text-align:center;margin:24px 0 8px}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<div id="app"></div>
+<script>
+(function(){
+  function b64ToBytes(b64){
+    var s=b64.replace(/-/g,'+').replace(/_/g,'/');
+    while(s.length%4)s+='=';
+    var bin=atob(s);
+    var out=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);
+    return out;
+  }
+  function gunzip(bytes){
+    return new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  }
+  function fmtTime(ms){
+    if(!ms)return '—';
+    try{return new Date(ms).toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}catch(e){return '—';}
+  }
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+  function row(l,v){return '<div class="row"><span class="label">'+esc(l)+'</span><span>'+esc(v||'—')+'</span></div>';}
+  function statusLabel(s){
+    var m={active:'Active',past_return:'Past expected return',emergency:'Emergency threshold exceeded',needs_update:'Needs update',none:'No active adventure'};
+    return m[s]||s;
+  }
+  function render(d){
+    var html='<h1>'+esc(d.n)+'</h1><p class="sub">Outdoor safety profile</p>';
+    html+='<span class="badge '+(d.stat||'none').replace(/_/g,'-')+'">'+esc(statusLabel(d.stat))+'</span>';
+    if(d.stat==='past_return'||d.stat==='emergency'){
+      html+='<div class="warn">&#9888;&#65039; Possibly overdue — consider contacting emergency contacts.</div>';
+    }
+    if(d.act){
+      html+='<div class="card"><h2>Current adventure</h2>';
+      html+=row('Activity',d.act);
+      if(d.loc)html+=row('Location',d.loc);
+      if(d.rte)html+=row('Route',d.rte);
+      html+=row('Started',fmtTime(d.st));
+      html+=row('Expected return',fmtTime(d.ret));
+      if(d.note)html+=row('Notes',d.note);
+      html+='</div>';
+    }
+    if(d.track&&d.track.length){
+      html+='<div class="card"><h2>Tracking</h2>';
+      d.track.forEach(function(t){
+        html+='<p style="margin:8px 0"><a class="link" href="'+esc(t.u)+'" rel="noopener">'+esc(t.l)+'</a></p>';
+      });
+      html+='</div>';
+    }
+    if(d.contacts&&d.contacts.length){
+      html+='<div class="card"><h2>Emergency</h2>';
+      d.contacts.forEach(function(c){
+        if(c.p)html+='<a class="btn" href="tel:'+esc(c.p)+'">Call '+(c.n||'contact')+'</a>';
+        if(c.s)html+='<a class="btn" style="background:#555;margin-top:8px" href="tel:'+esc(c.s)+'">Call secondary</a>';
+      });
+      html+='</div>';
+    }
+    if(d.med&&(d.med.b||d.med.a||d.med.n)){
+      html+='<div class="card"><h2>Medical</h2>';
+      if(d.med.b)html+=row('Blood type',d.med.b);
+      if(d.med.a)html+=row('Allergies',d.med.a);
+      if(d.med.n)html+=row('Notes',d.med.n);
+      html+='</div>';
+    }
+    if(d.veh&&(d.veh.m||d.veh.c||d.veh.p)){
+      html+='<div class="card"><h2>Vehicle</h2>';
+      if(d.veh.m)html+=row('Make / model',d.veh.m);
+      if(d.veh.c)html+=row('Color',d.veh.c);
+      if(d.veh.p)html+=row('Plate',d.veh.p);
+      html+='</div>';
+    }
+    html+='<p class="footer">TrailTag by Sankara · profile encoded in QR</p>';
+    document.getElementById('app').innerHTML=html;
+  }
+  var token=new URLSearchParams(location.search).get('d');
+  if(!token){document.getElementById('app').innerHTML='<div class="err">No profile data in this link.</div>';return;}
+  var flag=token.charAt(0);
+  var raw=b64ToBytes(token.slice(1));
+  var work=flag==='z'?gunzip(raw).then(function(buf){return JSON.parse(new TextDecoder().decode(buf));}):Promise.resolve(JSON.parse(new TextDecoder().decode(raw)));
+  work.then(render).catch(function(){document.getElementById('app').innerHTML='<div class="err">Could not read this safety profile.</div>';});
+})();
+</script>
+</body>
+</html>

@@ -277,6 +277,43 @@ class NfcFlasher : AppCompatActivity() {
                 }
             }
         }
+        handleIncomingSyncIntent(intent)
+    }
+
+    /** Reload generated.png and optionally arm — used when Card Studio / TrailTag push a fresh image. */
+    private fun handleIncomingSyncIntent(intent: Intent?) {
+        if (intent == null || isNfcTagIntent(intent)) return
+        val shouldArm = intent.getBooleanExtra(IntentKeys.ArmSync, false)
+        val reloaded = reloadGeneratedImageFromDisk()
+        if (reloaded) {
+            bindSyncPreview()
+            Log.i(TAG, "Reloaded generated image (${mBitmap?.width}x${mBitmap?.height}) arm=$shouldArm")
+        } else if (shouldArm) {
+            Log.w(TAG, "ArmSync requested but generated.png missing or unreadable")
+        }
+        if (shouldArm && reloaded && !mIsFlashing && !transferPending.get()) {
+            findViewById<View>(android.R.id.content).post {
+                if (!mIsFlashing && !transferPending.get()) {
+                    armSync()
+                }
+            }
+        }
+    }
+
+    /** Fresh read from generated.png — clears cached NFC payload so the next transfer matches disk. */
+    private fun reloadGeneratedImageFromDisk(): Boolean {
+        preparedPayloadBitmap = null
+        mImgFileUri = Uri.fromFile(getFileStreamPath(GeneratedImageFilename))
+        val path = mImgFileUri?.path ?: return false
+        val file = java.io.File(path)
+        if (!file.exists() || file.length() <= 0L) {
+            mBitmap = null
+            return false
+        }
+        mBitmap = BitmapFactory.decodeFile(path, BitmapFactory.Options())?.let {
+            BitmapUtils.toSoftwareBitmap(it)
+        }
+        return mBitmap != null
     }
 
     private enum class ClearPanelUi {
@@ -565,6 +602,8 @@ class NfcFlasher : AppCompatActivity() {
         setIntent(intent)
         if (isNfcTagIntent(intent)) {
             handleNfcIntent(intent)
+        } else {
+            handleIncomingSyncIntent(intent)
         }
     }
 
@@ -1089,11 +1128,7 @@ class NfcFlasher : AppCompatActivity() {
         beginRearmCooldown()
         postTransferActions?.visibility = View.GONE
         preparedPayloadBitmap = null
-        mImgFileUri?.path?.let { path ->
-            mBitmap = BitmapFactory.decodeFile(path, BitmapFactory.Options())?.let {
-                BitmapUtils.toSoftwareBitmap(it)
-            }
-        }
+        reloadGeneratedImageFromDisk()
         updateSyncArmedUi()
         prepareTransferPayload()
         bindSyncPreview()

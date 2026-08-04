@@ -59,6 +59,11 @@
             android:parentActivityName=".SettingsActivity" />
 
         <activity
+            android:name=".DisplayTroubleshootActivity"
+            android:exported="false"
+            android:parentActivityName=".SettingsActivity" />
+
+        <activity
             android:name=".ImageCropActivity"
             android:exported="false"
             android:parentActivityName=".ImageEditActivity" />

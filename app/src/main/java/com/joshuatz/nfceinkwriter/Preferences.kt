@@ -57,8 +57,15 @@ class Preferences(private val context: Context) {
         getPreferences().edit().putString(PreferenceKeys.DevicePassword, password).apply()
     }
 
+    fun getAppThemeStyle(): AppThemeStyle =
+        AppThemeStyle.fromPref(getPreferences().getString(PreferenceKeys.AppThemeStyle, null))
+
+    fun setAppThemeStyle(style: AppThemeStyle) {
+        getPreferences().edit().putString(PreferenceKeys.AppThemeStyle, style.prefValue).apply()
+    }
+
     fun showScreenSizePicker(activity: Activity, callback: (String) -> Unit) {
-        AlertDialog.Builder(activity, R.style.Theme_Sankara)
+        AlertDialog.Builder(activity, AppTheme.applyDialogTheme(activity))
             .setTitle(R.string.settings_display_size)
             .setItems(ScreenSizes) { _, which ->
                 val selected = ScreenSizes[which]

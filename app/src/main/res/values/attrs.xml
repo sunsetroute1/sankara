@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="appBackground" format="color" />
+    <attr name="appSurface" format="color" />
+    <attr name="appSurfaceElevated" format="color" />
+    <attr name="appAccent" format="color" />
+    <attr name="appTextPrimary" format="color" />
+    <attr name="appTextSecondary" format="color" />
+    <attr name="appTextMuted" format="color" />
+    <attr name="appBorder" format="color" />
+    <attr name="appBorderSubtle" format="color" />
+    <attr name="appGlass" format="color" />
+    <attr name="appRipple" format="color" />
+    <attr name="appSuccess" format="color" />
+    <attr name="appWarning" format="color" />
+    <attr name="appError" format="color" />
+</resources>

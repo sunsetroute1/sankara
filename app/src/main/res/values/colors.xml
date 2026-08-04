@@ -6,13 +6,17 @@
     <color name="sankara_green">#009739</color>
     <color name="sankara_green_dark">#006B28</color>
     <color name="sankara_gold">#FCD116</color>
-    <color name="sankara_charcoal">#0F0F0F</color>
-    <color name="sankara_surface">#1A1A1A</color>
-    <color name="sankara_surface_elevated">#252525</color>
-    <color name="sankara_border">#3A3A3A</color>
-    <color name="sankara_text_primary">#F4F4EF</color>
-    <color name="sankara_text_secondary">#B8B8B0</color>
-    <color name="sankara_text_muted">#7A7A72</color>
+    <color name="sankara_gold_muted">#C9A812</color>
+    <color name="sankara_charcoal">#0A0A0A</color>
+    <color name="sankara_surface">#141414</color>
+    <color name="sankara_surface_elevated">#1E1E1E</color>
+    <color name="sankara_border">#333333</color>
+    <color name="sankara_border_subtle">#262626</color>
+    <color name="sankara_glass">#D9141414</color>
+    <color name="sankara_ripple">#33FCD116</color>
+    <color name="sankara_text_primary">#F5F5F0</color>
+    <color name="sankara_text_secondary">#C2C2BA</color>
+    <color name="sankara_text_muted">#8A8A82</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -20,4 +24,23 @@
     <!-- E-ink output palettes (preview chips) -->
     <color name="eink_red">#CC0000</color>
     <color name="eink_yellow">#E6C200</color>
+
+    <!-- Modern (sleek neutral) palette -->
+    <color name="modern_bg">#0D1117</color>
+    <color name="modern_surface">#161B22</color>
+    <color name="modern_surface_elevated">#21262D</color>
+    <color name="modern_primary">#58A6FF</color>
+    <color name="modern_primary_dark">#388BFD</color>
+    <color name="modern_secondary">#3FB950</color>
+    <color name="modern_secondary_dark">#238636</color>
+    <color name="modern_accent">#A371F7</color>
+    <color name="modern_border">#30363D</color>
+    <color name="modern_border_subtle">#21262D</color>
+    <color name="modern_glass">#D9161B22</color>
+    <color name="modern_ripple">#3358A6FF</color>
+    <color name="modern_text_primary">#F0F6FC</color>
+    <color name="modern_text_secondary">#8B949E</color>
+    <color name="modern_text_muted">#6E7681</color>
+    <color name="modern_warning">#D29922</color>
+    <color name="modern_error">#F85149</color>
 </resources>

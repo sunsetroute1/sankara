@@ -16,3 +16,7 @@ local.properties
 androguard.db
 androguard.db-shm
 androguard.db-wal
+keystore.properties
+release/
+*.keystore
+*.jks

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="@dimen/sankara_radius_md" />
+        </shape>
+    </item>
+    <item android:gravity="start">
+        <shape android:shape="rectangle">
+            <size android:width="@dimen/sankara_accent_bar_width" />
+            <solid android:color="?attr/colorPrimary" />
+            <corners
+                android:bottomLeftRadius="@dimen/sankara_radius_md"
+                android:topLeftRadius="@dimen/sankara_radius_md" />
+        </shape>
+    </item>
+</layer-list>

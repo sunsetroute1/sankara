@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Sankara — Pan-African revolutionary palette -->
     <style name="Theme.Sankara" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/sankara_red</item>
         <item name="colorPrimaryVariant">@color/sankara_red_dark</item>
@@ -9,59 +10,204 @@
         <item name="android:colorBackground">@color/sankara_charcoal</item>
         <item name="colorSurface">@color/sankara_surface</item>
         <item name="colorOnSurface">@color/sankara_text_primary</item>
+        <item name="appBackground">@color/sankara_charcoal</item>
+        <item name="appSurface">@color/sankara_surface</item>
+        <item name="appSurfaceElevated">@color/sankara_surface_elevated</item>
+        <item name="appAccent">@color/sankara_gold</item>
+        <item name="appTextPrimary">@color/sankara_text_primary</item>
+        <item name="appTextSecondary">@color/sankara_text_secondary</item>
+        <item name="appTextMuted">@color/sankara_text_muted</item>
+        <item name="appBorder">@color/sankara_border</item>
+        <item name="appBorderSubtle">@color/sankara_border_subtle</item>
+        <item name="appGlass">@color/sankara_glass</item>
+        <item name="appRipple">@color/sankara_ripple</item>
+        <item name="appSuccess">@color/sankara_green</item>
+        <item name="appWarning">@color/sankara_gold</item>
+        <item name="appError">@color/sankara_red</item>
         <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
         <item name="android:navigationBarColor" tools:targetApi="l">@color/sankara_charcoal</item>
         <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="l">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
-        <item name="materialSwitchStyle">@style/Widget.Sankara.Switch</item>
-        <item name="materialButtonStyle">@style/Widget.Sankara.Button</item>
-        <item name="materialButtonOutlinedStyle">@style/Widget.Sankara.Button.Outlined</item>
+        <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
+        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.Outlined</item>
+        <item name="sliderStyle">@style/Widget.App.Slider</item>
+        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>
+        <item name="chipStyle">@style/Widget.App.Chip</item>
     </style>
 
-    <style name="Widget.Sankara.Button" parent="Widget.MaterialComponents.Button">
+    <!-- Modern — sleek neutral dark UI -->
+    <style name="Theme.Modern" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/modern_primary</item>
+        <item name="colorPrimaryVariant">@color/modern_primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/modern_secondary</item>
+        <item name="colorSecondaryVariant">@color/modern_secondary_dark</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:colorBackground">@color/modern_bg</item>
+        <item name="colorSurface">@color/modern_surface</item>
+        <item name="colorOnSurface">@color/modern_text_primary</item>
+        <item name="appBackground">@color/modern_bg</item>
+        <item name="appSurface">@color/modern_surface</item>
+        <item name="appSurfaceElevated">@color/modern_surface_elevated</item>
+        <item name="appAccent">@color/modern_accent</item>
+        <item name="appTextPrimary">@color/modern_text_primary</item>
+        <item name="appTextSecondary">@color/modern_text_secondary</item>
+        <item name="appTextMuted">@color/modern_text_muted</item>
+        <item name="appBorder">@color/modern_border</item>
+        <item name="appBorderSubtle">@color/modern_border_subtle</item>
+        <item name="appGlass">@color/modern_glass</item>
+        <item name="appRipple">@color/modern_ripple</item>
+        <item name="appSuccess">@color/modern_secondary</item>
+        <item name="appWarning">@color/modern_warning</item>
+        <item name="appError">@color/modern_error</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:targetApi="l">@color/modern_bg</item>
+        <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="l">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
+        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.Outlined</item>
+        <item name="sliderStyle">@style/Widget.App.Slider</item>
+        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>
+        <item name="chipStyle">@style/Widget.App.Chip</item>
+    </style>
+
+    <style name="TextAppearance.App.Section" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/appTextPrimary</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.App.Title" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">?attr/appTextPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.App.Body" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">?attr/appTextSecondary</item>
+        <item name="android:lineSpacingExtra">3dp</item>
+    </style>
+
+    <style name="TextAppearance.App.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">?attr/appTextMuted</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textAllCaps">false</item>
-        <item name="cornerRadius">8dp</item>
-        <item name="backgroundTint">@color/sankara_red</item>
+        <item name="cornerRadius">@dimen/sankara_radius_sm</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0.01</item>
         <item name="android:paddingTop">14dp</item>
         <item name="android:paddingBottom">14dp</item>
+        <item name="iconTint">@color/white</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <style name="Widget.Sankara.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <style name="Widget.App.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:textAllCaps">false</item>
-        <item name="cornerRadius">8dp</item>
-        <item name="strokeColor">@color/sankara_green</item>
-        <item name="android:textColor">@color/sankara_text_primary</item>
+        <item name="cornerRadius">@dimen/sankara_radius_sm</item>
+        <item name="strokeColor">?attr/colorSecondary</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="android:textColor">?attr/appTextPrimary</item>
+        <item name="iconTint">?attr/colorSecondary</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <style name="Widget.Sankara.Button.Secondary" parent="Widget.MaterialComponents.Button">
+    <style name="Widget.App.Button.Secondary" parent="Widget.MaterialComponents.Button">
         <item name="android:textAllCaps">false</item>
-        <item name="cornerRadius">8dp</item>
-        <item name="backgroundTint">@color/sankara_green</item>
+        <item name="cornerRadius">@dimen/sankara_radius_sm</item>
+        <item name="backgroundTint">?attr/colorSecondary</item>
         <item name="android:textColor">@color/white</item>
+        <item name="iconTint">@color/white</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <style name="Widget.Sankara.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+    <style name="Widget.App.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/appTextMuted</item>
+    </style>
+
+    <style name="Widget.App.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
         <item name="android:textOn">@null</item>
         <item name="android:textOff">@null</item>
         <item name="android:showText">false</item>
+        <item name="thumbTint">?attr/appTextPrimary</item>
+        <item name="trackTint">?attr/appBorder</item>
     </style>
 
-    <style name="Widget.Sankara.Toolbar" parent="Widget.MaterialComponents.Toolbar">
-        <item name="android:background">@color/sankara_surface</item>
-        <item name="titleTextColor">@color/sankara_text_primary</item>
-        <item name="subtitleTextColor">@color/sankara_gold</item>
+    <style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@drawable/app_toolbar_bg</item>
+        <item name="titleTextColor">?attr/appTextPrimary</item>
+        <item name="subtitleTextColor">?attr/appAccent</item>
+        <item name="android:minHeight">56dp</item>
     </style>
+
+    <style name="Widget.App.Slider" parent="Widget.MaterialComponents.Slider">
+        <item name="thumbColor">?attr/appAccent</item>
+        <item name="trackColorActive">?attr/colorPrimary</item>
+        <item name="trackColorInactive">?attr/appBorder</item>
+        <item name="haloColor">?attr/appRipple</item>
+    </style>
+
+    <style name="Widget.App.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/app_chip_fill</item>
+        <item name="chipStrokeColor">@color/app_chip_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">?attr/appTextPrimary</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipCornerRadius">@dimen/sankara_radius_sm</item>
+    </style>
+
+    <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">?attr/colorSecondary</item>
+        <item name="hintTextColor">?attr/appTextMuted</item>
+        <item name="boxBackgroundColor">?attr/appSurfaceElevated</item>
+        <item name="boxCornerRadiusTopStart">@dimen/sankara_radius_sm</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/sankara_radius_sm</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/sankara_radius_sm</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/sankara_radius_sm</item>
+    </style>
+
+    <style name="Widget.App.Card" parent="CardView">
+        <item name="cardBackgroundColor">?attr/appSurfaceElevated</item>
+        <item name="cardCornerRadius">@dimen/sankara_radius_md</item>
+        <item name="cardElevation">0dp</item>
+        <item name="contentPadding">0dp</item>
+    </style>
+
+    <!-- Legacy aliases — layouts may still reference these names -->
+    <style name="TextAppearance.Sankara.Section" parent="TextAppearance.App.Section" />
+    <style name="TextAppearance.Sankara.Title" parent="TextAppearance.App.Title" />
+    <style name="TextAppearance.Sankara.Body" parent="TextAppearance.App.Body" />
+    <style name="TextAppearance.Sankara.Caption" parent="TextAppearance.App.Caption" />
+    <style name="Widget.Sankara.Button" parent="Widget.App.Button" />
+    <style name="Widget.Sankara.Button.Outlined" parent="Widget.App.Button.Outlined" />
+    <style name="Widget.Sankara.Button.Secondary" parent="Widget.App.Button.Secondary" />
+    <style name="Widget.Sankara.Button.Text" parent="Widget.App.Button.Text" />
+    <style name="Widget.Sankara.Switch" parent="Widget.App.Switch" />
+    <style name="Widget.Sankara.Toolbar" parent="Widget.App.Toolbar" />
+    <style name="Widget.Sankara.Slider" parent="Widget.App.Slider" />
+    <style name="Widget.Sankara.Chip" parent="Widget.App.Chip" />
+    <style name="Widget.Sankara.TextInputLayout" parent="Widget.App.TextInputLayout" />
+    <style name="Widget.Sankara.Card" parent="Widget.App.Card" />
 
     <style name="ProgressBarStyle">
-        <item name="colorAccent">@color/sankara_gold</item>
+        <item name="colorAccent">?attr/appAccent</item>
     </style>
 
-    <!-- Legacy alias for NFC flasher layouts -->
     <style name="Theme.NFCEInkWriter" parent="Theme.Sankara" />
 
-    <!-- CanHub crop screen: light toolbar so the "Crop" text action is visible. -->
     <style name="Theme.Sankara.Crop" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/sankara_border</item>
@@ -73,5 +219,18 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="actionMenuTextColor">@color/sankara_green</item>
         <item name="android:actionMenuTextColor">@color/sankara_green</item>
+    </style>
+
+    <style name="Theme.Modern.Crop" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/modern_border</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="android:colorBackground">@color/black</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/modern_border</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="actionMenuTextColor">@color/modern_primary</item>
+        <item name="android:actionMenuTextColor">@color/modern_primary</item>
     </style>
 </resources>

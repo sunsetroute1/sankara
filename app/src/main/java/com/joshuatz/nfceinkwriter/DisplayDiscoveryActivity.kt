@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
  * On-device passive e-paper discovery. Probes known protocols without flashing image data.
  * New passive drivers register probes in [com.joshuatz.nfceinkwriter.nfc.discovery.EInkDiscoveryEngine].
  */
-class DisplayDiscoveryActivity : AppCompatActivity() {
+class DisplayDiscoveryActivity : ThemedActivity() {
 
     private lateinit var preferences: Preferences
     private var nfcAdapter: NfcAdapter? = null

@@ -83,7 +83,7 @@ object NfcHelper {
             NfcRadioState.ENABLED -> return
             NfcRadioState.DISABLED -> {
                 enablePromptShownThisSession = true
-                MaterialAlertDialogBuilder(activity, R.style.Theme_Sankara)
+                MaterialAlertDialogBuilder(activity, AppTheme.applyDialogTheme(activity))
                     .setTitle(R.string.nfc_enable_dialog_title)
                     .setMessage(R.string.nfc_enable_dialog_message)
                     .setPositiveButton(R.string.nfc_open_settings) { _, _ -> openSettings(activity) }
@@ -97,7 +97,7 @@ object NfcHelper {
     fun promptDisableIfNeeded(activity: Activity, preferences: Preferences) {
         if (!preferences.getNfcPromptDisableOnClose()) return
         if (!isEnabled(activity)) return
-        MaterialAlertDialogBuilder(activity, R.style.Theme_Sankara)
+        MaterialAlertDialogBuilder(activity, AppTheme.applyDialogTheme(activity))
             .setTitle(R.string.nfc_disable_dialog_title)
             .setMessage(R.string.nfc_disable_dialog_message)
             .setPositiveButton(R.string.nfc_open_settings) { _, _ -> openSettings(activity) }

@@ -3,6 +3,7 @@ package com.joshuatz.nfceinkwriter.nfc.waveshare
 import android.graphics.Bitmap
 import android.graphics.Color
 import com.joshuatz.nfceinkwriter.BitmapUtils
+import com.joshuatz.nfceinkwriter.PanelTestPattern
 
 /**
  * Waveshare SDK expects exact panel dimensions and strictly black/white pixels only.
@@ -11,9 +12,44 @@ import com.joshuatz.nfceinkwriter.BitmapUtils
 object WaveshareBitmapPrep {
 
     /** Full white frame — use to force a clean panel before a real image after partial transfers. */
-    fun blankPanel(width: Int, height: Int): Bitmap {
+    fun blankPanel(width: Int, height: Int): Bitmap = solidPanel(width, height, Color.WHITE)
+
+    fun testPattern(width: Int, height: Int, pattern: PanelTestPattern): Bitmap = when (pattern) {
+        PanelTestPattern.WHITE -> solidPanel(width, height, Color.WHITE)
+        PanelTestPattern.BLACK -> solidPanel(width, height, Color.BLACK)
+        PanelTestPattern.CHECKERBOARD -> checkerboardPanel(width, height)
+        PanelTestPattern.HORIZONTAL_BARS -> horizontalBarsPanel(width, height)
+    }
+
+    private fun solidPanel(width: Int, height: Int, color: Int): Bitmap {
         return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
-            eraseColor(Color.WHITE)
+            eraseColor(color)
+        }
+    }
+
+    /** 8×8 px tiles — partial refresh shows a sharp seam between updated and stale regions. */
+    private fun checkerboardPanel(width: Int, height: Int): Bitmap {
+        val tile = 8
+        return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    val dark = ((x / tile) + (y / tile)) % 2 == 0
+                    setPixel(x, y, if (dark) Color.BLACK else Color.WHITE)
+                }
+            }
+        }
+    }
+
+    /** Alternating horizontal bands — reveals row-wise refresh dropouts. */
+    private fun horizontalBarsPanel(width: Int, height: Int): Bitmap {
+        val band = (height / 8).coerceAtLeast(4)
+        return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+            for (y in 0 until height) {
+                val color = if ((y / band) % 2 == 0) Color.BLACK else Color.WHITE
+                for (x in 0 until width) {
+                    setPixel(x, y, color)
+                }
+            }
         }
     }
 

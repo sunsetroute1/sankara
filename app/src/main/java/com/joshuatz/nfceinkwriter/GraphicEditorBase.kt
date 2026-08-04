@@ -83,19 +83,16 @@ abstract class GraphicEditorBase: AppCompatActivity() {
 
     private suspend fun getAndFlashGraphic() {
         val mContext = this
-        val preferences = Preferences(this)
         val imageBytes = this.getBitmapFromWebView(this.mWebView!!)
         val rawBitmap: Bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-        val pixels = preferences.getScreenSizePixels()
-        val einkBitmap = EInkImageProcessor.processForDisplay(
-            rawBitmap, pixels.first, pixels.second, preferences.getColorMode(),
-        )
         withContext(Dispatchers.IO) {
-            openFileOutput(GeneratedImageFilename, Context.MODE_PRIVATE).use { fileOutStream ->
-                einkBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutStream)
-                fileOutStream.close()
-                startActivity(Intent(mContext, ImagePreviewActivity::class.java))
+            openFileOutput(PickedSourceFilename, Context.MODE_PRIVATE).use { fileOutStream ->
+                rawBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutStream)
             }
+        }
+        withContext(Dispatchers.Main) {
+            startActivity(Intent(mContext, ImageEditActivity::class.java))
+            finish()
         }
     }
 

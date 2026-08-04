@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sankara_charcoal">
+    android:background="?attr/appBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/previewAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/sankara_surface"
+        android:background="?attr/appSurface"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:textColor="@color/sankara_gold"
+            android:textColor="?attr/appAccent"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -42,14 +42,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:text="@string/image_preview_subtitle"
-            android:textColor="@color/sankara_text_muted"
+            android:textColor="?attr/appTextMuted"
             android:textSize="14sp" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            app:cardBackgroundColor="@color/sankara_surface_elevated"
+            app:cardBackgroundColor="?attr/appSurfaceElevated"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp">
 
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
-            android:textColor="@color/sankara_text_muted" />
+            android:textColor="?attr/appTextMuted" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

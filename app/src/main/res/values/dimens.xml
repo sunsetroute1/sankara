@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="sankara_space_xs">4dp</dimen>
+    <dimen name="sankara_space_sm">8dp</dimen>
+    <dimen name="sankara_space_md">12dp</dimen>
+    <dimen name="sankara_space_lg">16dp</dimen>
+    <dimen name="sankara_space_xl">20dp</dimen>
+    <dimen name="sankara_space_xxl">24dp</dimen>
+
+    <dimen name="sankara_radius_sm">10dp</dimen>
+    <dimen name="sankara_radius_md">14dp</dimen>
+    <dimen name="sankara_radius_lg">18dp</dimen>
+
+    <dimen name="sankara_stripe_height">3dp</dimen>
+    <dimen name="sankara_accent_bar_width">3dp</dimen>
+</resources>

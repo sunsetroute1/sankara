@@ -4,25 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sankara_charcoal"
+    android:background="?attr/appBackground"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/sankara_surface"
+        android:background="@android:color/transparent"
         app:elevation="0dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/main_toolbar"
-            style="@style/Widget.Sankara.Toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:contentInsetStartWithNavigation="0dp"
-            app:menu="@menu/menu_main"
-            app:subtitle="@string/app_tagline"
-            app:title="@string/app_name" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/main_toolbar"
+                style="@style/Widget.Sankara.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:contentInsetStartWithNavigation="0dp"
+                app:menu="@menu/menu_main"
+                app:subtitle="@string/app_tagline"
+                app:title="@string/app_name" />
+
+            <include layout="@layout/include_pan_african_stripe" />
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -31,157 +39,300 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingBottom="32dp"
+        android:paddingBottom="@dimen/sankara_space_xxl"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="16dp">
+            android:paddingHorizontal="@dimen/sankara_space_xl"
+            android:paddingTop="@dimen/sankara_space_lg">
 
-            <!-- Status chips -->
+            <!-- Status -->
             <LinearLayout
+                android:id="@+id/statusSectionAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/sankara_space_md"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/chipDisplaySize"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/sankara_chip_bg"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:textColor="@color/sankara_gold"
-                    android:textSize="12sp"
-                    tools:text="Panel: 2.7 inch" />
+                <View
+                    android:layout_width="@dimen/sankara_accent_bar_width"
+                    android:layout_height="18dp"
+                    android:background="?attr/colorPrimary" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="2dp"
+                    android:background="?attr/appAccent" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="2dp"
+                    android:background="?attr/colorSecondary" />
 
                 <TextView
-                    android:id="@+id/chipColorMode"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/sankara_chip_bg"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:textColor="@color/sankara_green"
-                    android:textSize="12sp"
-                    tools:text="Mode: B/W" />
+                    android:layout_marginStart="@dimen/sankara_space_md"
+                    android:text="@string/home_section_status"
+                    android:textAppearance="@style/TextAppearance.Sankara.Section" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/chipNfcStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/sankara_chip_bg"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:textColor="@color/sankara_red"
-                android:textSize="12sp"
-                tools:text="NFC: on" />
-
-            <!-- Preview card -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/reflashButton"
+                style="@style/Widget.Sankara.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:cardBackgroundColor="@color/sankara_surface_elevated"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
+                android:layout_marginBottom="@dimen/sankara_space_xl">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/sankara_space_lg">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <View
-                            android:layout_width="4dp"
-                            android:layout_height="24dp"
-                            android:background="@color/sankara_red" />
+                        <TextView
+                            android:id="@+id/chipDisplaySize"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/sankara_space_sm"
+                            android:layout_weight="1"
+                            android:background="@drawable/sankara_chip_bg"
+                            android:paddingHorizontal="@dimen/sankara_space_md"
+                            android:paddingVertical="@dimen/sankara_space_sm"
+                            android:textColor="?attr/appAccent"
+                            android:textSize="12sp"
+                            tools:text="Panel: 2.7 inch" />
 
                         <TextView
-                            android:id="@+id/reflashButtonText"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/chipColorMode"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="@string/reflash_cta_text"
-                            android:textColor="@color/sankara_text_primary"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:layout_weight="1"
+                            android:background="@drawable/sankara_chip_bg"
+                            android:paddingHorizontal="@dimen/sankara_space_md"
+                            android:paddingVertical="@dimen/sankara_space_sm"
+                            android:textColor="?attr/colorSecondary"
+                            android:textSize="12sp"
+                            tools:text="Mode: B/W" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/reflashButtonImage"
+                    <TextView
+                        android:id="@+id/chipNfcStatus"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp"
-                        android:layout_marginTop="12dp"
-                        android:background="@color/sankara_charcoal"
-                        android:contentDescription="@string/image_preview_content_description"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@android:drawable/stat_sys_warning" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sankara_space_sm"
+                        android:background="@drawable/sankara_chip_bg"
+                        android:paddingHorizontal="@dimen/sankara_space_md"
+                        android:paddingVertical="@dimen/sankara_space_sm"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="12sp"
+                        tools:text="NFC: on" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Actions -->
+            <!-- Last sync preview -->
+            <LinearLayout
+                android:id="@+id/lastSyncSectionAccent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_md"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="@dimen/sankara_accent_bar_width"
+                    android:layout_height="18dp"
+                    android:background="?attr/colorPrimary" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="2dp"
+                    android:background="?attr/appAccent" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="2dp"
+                    android:background="?attr/colorSecondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sankara_space_md"
+                    android:text="@string/home_section_last_sync"
+                    android:textAppearance="@style/TextAppearance.Sankara.Section" />
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/reflashButton"
+                style="@style/Widget.Sankara.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_xl"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="?attr/appSurfaceElevated">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View
+                        android:id="@+id/lastSyncPanStripe"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/sankara_stripe_height"
+                        android:background="@drawable/sankara_pan_african_stripe" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/sankara_space_lg">
+
+                        <TextView
+                            android:id="@+id/reflashButtonText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/reflash_cta_text"
+                            android:textAppearance="@style/TextAppearance.Sankara.Title"
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:id="@+id/reflashLastSync"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/sankara_space_xs"
+                            android:textAppearance="@style/TextAppearance.Sankara.Caption"
+                            tools:text="Last synced 6/21/26, 3:45 PM" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/sankara_space_md"
+                            android:background="@drawable/sankara_preview_frame"
+                            android:padding="@dimen/sankara_space_sm">
+
+                            <ImageView
+                                android:id="@+id/reflashButtonImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="176dp"
+                                android:contentDescription="@string/image_preview_content_description"
+                                android:scaleType="fitCenter"
+                                app:srcCompat="@android:drawable/stat_sys_warning" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cta_clear_panel"
+                style="@style/Widget.Sankara.Button.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_xl"
+                android:text="@string/nfc_btn_clear_panel"
+                app:icon="@android:drawable/ic_menu_delete"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/sankara_space_md" />
+
+            <!-- Create actions -->
+            <LinearLayout
+                android:id="@+id/createSectionAccent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_md"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="@dimen/sankara_accent_bar_width"
+                    android:layout_height="18dp"
+                    android:background="?attr/colorPrimary" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="2dp"
+                    android:background="?attr/appAccent" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="2dp"
+                    android:background="?attr/colorSecondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sankara_space_md"
+                    android:text="@string/home_section_create"
+                    android:textAppearance="@style/TextAppearance.Sankara.Section" />
+            </LinearLayout>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cta_pick_image_file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="@dimen/sankara_space_md"
                 android:text="@string/pick_image_file_cta_text"
                 app:icon="@android:drawable/ic_menu_gallery"
-                app:iconGravity="textStart" />
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/sankara_space_md" />
 
             <TextView
                 android:id="@+id/shareReceiveHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:lineSpacingExtra="2dp"
+                android:layout_marginBottom="@dimen/sankara_space_md"
                 android:text="@string/share_receive_hint"
-                android:textColor="@color/sankara_text_muted"
-                android:textSize="12sp" />
+                android:textAppearance="@style/TextAppearance.Sankara.Caption" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cta_now_playing"
-                style="@style/Widget.Sankara.Button.Secondary"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="@string/cta_now_playing"
-                app:icon="@android:drawable/ic_media_play"
-                app:iconGravity="textStart" />
+                android:layout_marginBottom="@dimen/sankara_space_sm"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cta_card_studio"
-                style="@style/Widget.Sankara.Button.Secondary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="@string/cta_card_studio"
-                app:icon="@android:drawable/ic_menu_share"
-                app:iconGravity="textStart" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cta_now_playing"
+                    style="@style/Widget.Sankara.Button.Secondary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/sankara_space_sm"
+                    android:layout_weight="1"
+                    android:text="@string/cta_now_playing_short"
+                    app:icon="@android:drawable/ic_media_play"
+                    app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cta_card_studio"
+                    style="@style/Widget.Sankara.Button.Secondary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/cta_card_studio_short"
+                    app:icon="@android:drawable/ic_menu_share"
+                    app:iconGravity="textStart" />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cta_new_text"
                 style="@style/Widget.Sankara.Button.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="@dimen/sankara_space_xxl"
                 android:text="@string/cta_new_text_invite"
                 app:icon="@android:drawable/ic_menu_edit"
                 app:iconGravity="textStart" />

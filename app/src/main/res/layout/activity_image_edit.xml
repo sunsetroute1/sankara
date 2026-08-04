@@ -3,22 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sankara_charcoal">
+    android:background="?attr/appBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/editAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/sankara_surface"
+        android:background="?attr/appSurface"
         app:elevation="0dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/edit_toolbar"
-            style="@style/Widget.Sankara.Toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:title="@string/image_edit_title" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/edit_toolbar"
+                style="@style/Widget.Sankara.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@android:drawable/ic_menu_revert"
+                app:title="@string/image_edit_title" />
+
+            <include layout="@layout/include_pan_african_stripe" />
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -30,31 +38,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/sankara_space_xl">
 
             <TextView
                 android:id="@+id/editPanelInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/sankara_gold"
+                android:textColor="?attr/appAccent"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginTop="@dimen/sankara_space_xs"
+                android:layout_marginBottom="@dimen/sankara_space_lg"
                 android:text="@string/image_edit_subtitle"
-                android:textColor="@color/sankara_text_muted"
-                android:textSize="13sp" />
+                android:textAppearance="@style/TextAppearance.Sankara.Caption" />
 
             <androidx.cardview.widget.CardView
+                style="@style/Widget.Sankara.Card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/sankara_surface_elevated"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/editPreviewImage"
@@ -80,49 +85,56 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipCrop"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        style="@style/Widget.Sankara.Chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/image_edit_crop" />
 
                     <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFitPanel"
+                        style="@style/Widget.Sankara.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/image_edit_fit_panel" />
+
+                    <com.google.android.material.chip.Chip
                         android:id="@+id/chipRotate"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        style="@style/Widget.Sankara.Chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/image_edit_rotate" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipFlipH"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        style="@style/Widget.Sankara.Chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/image_edit_flip_h" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipFlipV"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        style="@style/Widget.Sankara.Chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/image_edit_flip_v" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipInvert"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        style="@style/Widget.Sankara.Chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/image_edit_invert" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipEinkEnhance"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        style="@style/Widget.Sankara.Chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/image_edit_eink_enhance" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipReset"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        style="@style/Widget.Sankara.Chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/image_edit_reset" />
@@ -134,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/image_edit_contrast"
-                android:textColor="@color/sankara_text_muted"
+                android:textColor="?attr/appTextMuted"
                 android:textSize="13sp" />
 
             <com.google.android.material.slider.Slider
@@ -151,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/image_edit_brightness"
-                android:textColor="@color/sankara_text_muted"
+                android:textColor="?attr/appTextMuted"
                 android:textSize="13sp" />
 
             <com.google.android.material.slider.Slider
@@ -168,7 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/image_edit_threshold"
-                android:textColor="@color/sankara_text_muted"
+                android:textColor="?attr/appTextMuted"
                 android:textSize="13sp" />
 
             <com.google.android.material.slider.Slider
@@ -197,11 +209,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancelEdit"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.Sankara.Button.Text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
-                android:textColor="@color/sankara_text_muted" />
+                android:textColor="?attr/appTextMuted" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

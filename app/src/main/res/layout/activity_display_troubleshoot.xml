@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appBackground"
+    tools:context=".DisplayTroubleshootActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/troubleshootAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/troubleshoot_toolbar"
+                style="@style/Widget.Sankara.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:navigationIcon="@android:drawable/ic_menu_revert"
+                app:title="@string/troubleshoot_title" />
+
+            <include layout="@layout/include_pan_african_stripe" />
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/troubleshootScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="32dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/sankara_space_xl">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/troubleshoot_intro"
+                android:textAppearance="@style/TextAppearance.Sankara.Caption"
+                android:lineSpacingExtra="4dp" />
+
+            <!-- Symptom picker -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/troubleshoot_symptom_section"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:boxBackgroundMode="outline">
+
+                <AutoCompleteTextView
+                    android:id="@+id/symptomPicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/troubleshoot_symptom_hint"
+                    android:inputType="none"
+                    android:textColor="?attr/appTextPrimary" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.cardview.widget.CardView
+                style="@style/Widget.Sankara.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/sankara_space_lg">
+
+                    <TextView
+                        android:id="@+id/diagnosisTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/appAccent"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        tools:text="Partial overlay" />
+
+                    <TextView
+                        android:id="@+id/diagnosisCause"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:lineSpacingExtra="3dp"
+                        android:textColor="?attr/appTextPrimary"
+                        android:textSize="14sp"
+                        tools:text="Likely cause…" />
+
+                    <TextView
+                        android:id="@+id/diagnosisFix"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:lineSpacingExtra="3dp"
+                        android:textColor="?attr/colorSecondary"
+                        android:textSize="14sp"
+                        tools:text="What to try…" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Last sync -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/troubleshoot_last_sync_section"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <androidx.cardview.widget.CardView
+                style="@style/Widget.Sankara.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:id="@+id/lastSyncSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/sankara_space_lg"
+                    android:fontFamily="monospace"
+                    android:lineSpacingExtra="4dp"
+                    android:textColor="?attr/appTextSecondary"
+                    android:textSize="12sp"
+                    tools:text="No sync history yet." />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Recovery actions -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/troubleshoot_recovery_section"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/troubleshoot_recovery_summary"
+                android:textAppearance="@style/TextAppearance.Sankara.Caption" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRecoveryWhite"
+                style="@style/Widget.Sankara.Button.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/troubleshoot_action_white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRecoveryBlack"
+                style="@style/Widget.Sankara.Button.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/troubleshoot_action_black" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRecoveryCheckerboard"
+                style="@style/Widget.Sankara.Button.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/troubleshoot_action_checkerboard" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRecoveryBars"
+                style="@style/Widget.Sankara.Button.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/troubleshoot_action_bars" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRecommendedRecovery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/troubleshoot_action_recommended" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnExportReport"
+                style="@style/Widget.Sankara.Button.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/troubleshoot_export_report" />
+
+            <!-- Physical checklist -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sankara_space_xl"
+                android:text="@string/troubleshoot_physical_section"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/colorPrimary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/troubleshoot_physical_checklist"
+                android:textAppearance="@style/TextAppearance.Sankara.Caption" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

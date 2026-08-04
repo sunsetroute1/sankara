@@ -1,7 +1,10 @@
 package com.joshuatz.nfceinkwriter
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Build
+import kotlin.math.min
 
 object BitmapUtils {
 
@@ -68,5 +71,40 @@ object BitmapUtils {
         val y = (software.height - side) / 2
         val cropped = Bitmap.createBitmap(software, x, y, side, side)
         return if (size == side) cropped else Bitmap.createScaledBitmap(cropped, size, size, true)
+    }
+
+    /**
+     * Scale [source] to fit entirely inside [targetW]×[targetH] (aspect preserved), centered on
+     * [background]. Output is exactly panel pixel dimensions — no cropping.
+     */
+    fun fitInsidePanel(
+        source: Bitmap,
+        targetW: Int,
+        targetH: Int,
+        background: Int = Color.WHITE,
+    ): Bitmap {
+        val software = toSoftwareBitmap(source) ?: source
+        if (targetW <= 0 || targetH <= 0) return software
+        if (software.width == targetW && software.height == targetH) return software
+
+        val scale = min(
+            targetW.toFloat() / software.width,
+            targetH.toFloat() / software.height,
+        )
+        val scaledW = (software.width * scale).toInt().coerceAtLeast(1)
+        val scaledH = (software.height * scale).toInt().coerceAtLeast(1)
+        val scaled = Bitmap.createScaledBitmap(software, scaledW, scaledH, true)
+
+        val out = Bitmap.createBitmap(targetW, targetH, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(out)
+        canvas.drawColor(background)
+        canvas.drawBitmap(
+            scaled,
+            (targetW - scaledW) / 2f,
+            (targetH - scaledH) / 2f,
+            null,
+        )
+        if (scaled !== software) scaled.recycle()
+        return out
     }
 }

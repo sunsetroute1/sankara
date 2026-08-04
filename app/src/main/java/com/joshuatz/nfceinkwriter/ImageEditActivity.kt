@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.core.content.IntentCompat
@@ -16,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -24,12 +26,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class ImageEditActivity : AppCompatActivity() {
+class ImageEditActivity : ThemedActivity() {
 
     private lateinit var prefs: Preferences
     private var sourceBitmap: Bitmap? = null
     private var previewBitmap: Bitmap? = null
     private val editParams = ImageEditParams()
+    private var sourceModified = false
     private var previewJob: Job? = null
     private var sliderDebounceJob: Job? = null
     private var previewGeneration = 0
@@ -49,6 +52,7 @@ class ImageEditActivity : AppCompatActivity() {
             if (uri != null) {
                 loadBitmapFromUri(uri) { bitmap ->
                     replaceSourceBitmap(bitmap)
+                    sourceModified = true
                     clearTransformParams()
                     schedulePreview(immediate = true)
                 }
@@ -62,16 +66,14 @@ class ImageEditActivity : AppCompatActivity() {
         SystemBarUtils.applyStatusBarInset(findViewById(R.id.editAppBar))
 
         prefs = Preferences(this)
-        val pixels = prefs.getScreenSizePixels()
-        findViewById<TextView>(R.id.editPanelInfo).text =
-            getString(R.string.image_preview_panel, prefs.getScreenSize(), pixels.first, pixels.second)
+        updatePanelInfo()
 
         previewView = findViewById(R.id.editPreviewImage)
         chipFlipH = findViewById(R.id.chipFlipH)
         chipFlipV = findViewById(R.id.chipFlipV)
         chipInvert = findViewById(R.id.chipInvert)
 
-        findViewById<MaterialToolbar>(R.id.edit_toolbar).setNavigationOnClickListener { finish() }
+        findViewById<MaterialToolbar>(R.id.edit_toolbar).setNavigationOnClickListener { requestExit() }
 
         val sourceFile = getFileStreamPath(PickedSourceFilename)
         if (!sourceFile.exists()) {
@@ -90,9 +92,40 @@ class ImageEditActivity : AppCompatActivity() {
         setupControls()
         schedulePreview(immediate = true)
 
-        if (intent.getBooleanExtra(EXTRA_AUTO_CROP, false)) {
-            previewView.post { launchCrop() }
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requestExit()
+                }
+            },
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updatePanelInfo()
+    }
+
+    private fun updatePanelInfo() {
+        val pixels = prefs.getScreenSizePixels()
+        findViewById<TextView>(R.id.editPanelInfo).text =
+            getString(R.string.image_preview_panel, prefs.getScreenSize(), pixels.first, pixels.second)
+    }
+
+    private fun isDirty(): Boolean = sourceModified || !editParams.isDefault()
+
+    private fun requestExit() {
+        if (!isDirty()) {
+            finish()
+            return
         }
+        MaterialAlertDialogBuilder(this, AppTheme.applyDialogTheme(this))
+            .setTitle(R.string.image_edit_discard_title)
+            .setMessage(R.string.image_edit_discard_message)
+            .setPositiveButton(R.string.card_studio_discard) { _, _ -> finish() }
+            .setNegativeButton(R.string.card_studio_keep_editing, null)
+            .show()
     }
 
     private fun setupControls() {
@@ -101,6 +134,7 @@ class ImageEditActivity : AppCompatActivity() {
         chipInvert.isCheckable = true
 
         findViewById<Chip>(R.id.chipCrop).setOnClickListener { launchCrop() }
+        findViewById<Chip>(R.id.chipFitPanel).setOnClickListener { fitToPanel() }
         findViewById<Chip>(R.id.chipRotate).setOnClickListener {
             editParams.rotationQuarterTurns = (editParams.rotationQuarterTurns + 1) % 4
             schedulePreview(immediate = true)
@@ -147,7 +181,7 @@ class ImageEditActivity : AppCompatActivity() {
             setResult(RESULT_PICK_AGAIN)
             finish()
         }
-        findViewById<MaterialButton>(R.id.btnCancelEdit).setOnClickListener { finish() }
+        findViewById<MaterialButton>(R.id.btnCancelEdit).setOnClickListener { requestExit() }
     }
 
     private fun launchCrop() {
@@ -165,6 +199,42 @@ class ImageEditActivity : AppCompatActivity() {
                 putExtra(ImageCropActivity.EXTRA_ASPECT_Y, panelH)
             },
         )
+    }
+
+    private fun fitToPanel() {
+        val source = sourceBitmap ?: return
+        val (panelW, panelH) = prefs.getScreenSizePixels()
+        val panelLabel = prefs.getScreenSize()
+        previewJob?.cancel()
+        sliderDebounceJob?.cancel()
+
+        lifecycleScope.launch {
+            try {
+                val fitted = withContext(Dispatchers.Default) {
+                    val transformed = BitmapEditor.apply(source, editParams)
+                    val result = BitmapUtils.fitInsidePanel(transformed, panelW, panelH)
+                    if (transformed !== source && transformed !== result) {
+                        transformed.recycle()
+                    }
+                    result
+                }
+                replaceSourceBitmap(fitted)
+                sourceModified = true
+                clearTransformParams()
+                schedulePreview(immediate = true)
+                Toast.makeText(
+                    this@ImageEditActivity,
+                    getString(R.string.image_edit_fit_panel_done, panelLabel, panelW, panelH),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@ImageEditActivity,
+                    getString(R.string.crop_failed, e.message ?: "fit failed"),
+                    Toast.LENGTH_LONG,
+                ).show()
+            }
+        }
     }
 
     private fun loadBitmapFromUri(uri: Uri, onLoaded: (Bitmap) -> Unit) {
@@ -217,6 +287,7 @@ class ImageEditActivity : AppCompatActivity() {
         val sourceFile = getFileStreamPath(PickedSourceFilename)
         val loaded = BitmapFactory.decodeFile(sourceFile.absolutePath) ?: return
         replaceSourceBitmap(loaded)
+        sourceModified = false
         clearTransformParams()
         schedulePreview(immediate = true)
     }
@@ -293,6 +364,7 @@ class ImageEditActivity : AppCompatActivity() {
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
                     }
                 }
+                LastGeneratedImage.markSaved(this@ImageEditActivity)
                 if (bitmap !== previewBitmap) {
                     bitmap.recycle()
                 }
@@ -319,7 +391,6 @@ class ImageEditActivity : AppCompatActivity() {
 
     companion object {
         const val RESULT_PICK_AGAIN = 2
-        const val EXTRA_AUTO_CROP = "com.sankara.app.extra.AUTO_CROP"
         private const val CropTempFilename = "edit_crop_source.png"
         private const val SLIDER_DEBOUNCE_MS = 120L
     }

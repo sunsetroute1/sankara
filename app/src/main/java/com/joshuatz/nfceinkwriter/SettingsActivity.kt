@@ -8,14 +8,13 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.widget.RadioGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.google.android.material.textfield.TextInputEditText
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : ThemedActivity() {
 
     private lateinit var preferences: Preferences
     private var nfcStateReceiver: BroadcastReceiver? = null
@@ -26,19 +25,41 @@ class SettingsActivity : AppCompatActivity() {
         SystemBarUtils.applyStatusBarInset(findViewById(R.id.settingsAppBar))
         SystemBarUtils.applyNavigationBarInset(findViewById(R.id.settingsScroll))
         preferences = Preferences(this)
+        ThemeDecor.applySettingsScreen(this)
 
         findViewById<MaterialToolbar>(R.id.settings_toolbar).setNavigationOnClickListener {
             finish()
         }
 
-        showRandomQuote()
-
-        findViewById<androidx.cardview.widget.CardView>(R.id.quoteCard).setOnClickListener {
+        if (preferences.getAppThemeStyle().isSankara) {
             showRandomQuote()
+            findViewById<androidx.cardview.widget.CardView>(R.id.quoteCard).setOnClickListener {
+                showRandomQuote()
+            }
+        }
+
+        val themeGroup = findViewById<RadioGroup>(R.id.themeStyleGroup)
+        when (preferences.getAppThemeStyle()) {
+            AppThemeStyle.SANKARA -> findViewById<MaterialRadioButton>(R.id.radio_theme_sankara).isChecked = true
+            AppThemeStyle.MODERN -> findViewById<MaterialRadioButton>(R.id.radio_theme_modern).isChecked = true
+        }
+        themeGroup.setOnCheckedChangeListener { _, checkedId ->
+            val style = when (checkedId) {
+                R.id.radio_theme_modern -> AppThemeStyle.MODERN
+                else -> AppThemeStyle.SANKARA
+            }
+            if (style != preferences.getAppThemeStyle()) {
+                preferences.setAppThemeStyle(style)
+                recreate()
+            }
         }
 
         findViewById<MaterialButton>(R.id.btn_open_discovery).setOnClickListener {
             startActivity(Intent(this, DisplayDiscoveryActivity::class.java))
+        }
+
+        findViewById<MaterialButton>(R.id.btn_open_troubleshoot).setOnClickListener {
+            startActivity(Intent(this, DisplayTroubleshootActivity::class.java))
         }
 
         findViewById<MaterialButton>(R.id.btn_pick_display_size).apply {

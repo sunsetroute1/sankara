@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="@dimen/sankara_space_xl">
 
     <TextView
         android:id="@+id/transferStepLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/nfc_status_transferring"
-        android:textColor="@color/sankara_text_primary"
+        android:textColor="?attr/appTextPrimary"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="@string/pleaseWaitWhileFlashingText"
-        android:textColor="@color/sankara_text_muted"
+        android:textColor="?attr/appTextMuted"
         android:textSize="13sp" />
 
     <ProgressBar
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="end"
-        android:textColor="@color/sankara_gold"
+        android:textColor="?attr/appAccent"
         android:textSize="12sp"
         tools:text="42%" />
 

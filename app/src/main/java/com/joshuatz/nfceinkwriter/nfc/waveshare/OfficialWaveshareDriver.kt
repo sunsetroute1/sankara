@@ -40,6 +40,13 @@ object OfficialWaveshareDriver {
      */
     private const val MAX_ATTEMPTS = 3
     private const val RETRY_DELAY_MS = 3_000L
+    /**
+     * Observed on S26 Ultra + 2.7": v() can return progress=100 in ~2.4s while the panel is still
+     * repainting. Keep powering the module through a minimum hold so the e-ink refresh finishes.
+     */
+    private const val MIN_PHYSICAL_HOLD_MS = 12_000L
+    /** Tag lost this early — the Android Tag handle is dead; only a lift + re-discovery helps. */
+    private const val EARLY_TAG_LOSS_MS = 2_500L
 
     private val activeIsoDep = AtomicReference<IsoDep?>(null)
 
@@ -56,6 +63,8 @@ object OfficialWaveshareDriver {
         val retryable: Boolean,
         /** Tag handle is dead — in-place retries are pointless, only re-discovery helps. */
         val handleDead: Boolean = false,
+        /** v() failed within [EARLY_TAG_LOSS_MS] — same as handleDead for retry policy. */
+        val earlyTagLoss: Boolean = false,
     )
 
     fun transferSync(
@@ -81,7 +90,7 @@ object OfficialWaveshareDriver {
             }
             val outcome = attemptTransfer(context, tag, bitmap, panelType, password, progress)
             if (outcome.result.success || !outcome.retryable) return outcome.result
-            if (outcome.handleDead) {
+            if (outcome.handleDead || outcome.earlyTagLoss) {
                 // Stale tag handle (observed m()=-1 instantly after a stalled v()). Only a
                 // fresh discovery can fix this — bail out so the flasher can auto re-arm.
                 Log.i(TAG, "Tag handle dead — returning for re-discovery instead of in-place retry")
@@ -268,8 +277,37 @@ object OfficialWaveshareDriver {
 
             when {
                 result == 1 && finalProgress >= 100 -> {
+                    val fastReport = totalMs < MIN_PHYSICAL_HOLD_MS
+                    if (fastReport) {
+                        Log.i(
+                            TAG,
+                            "Engine reported 100% in ${totalMs}ms — holding NFC ${MIN_PHYSICAL_HOLD_MS - totalMs}ms " +
+                                "more for physical refresh",
+                        )
+                        val holdUntil = holdStartMs + MIN_PHYSICAL_HOLD_MS
+                        while (isoDep.isConnected && SystemClock.elapsedRealtime() < holdUntil) {
+                            val p = OfficialWaveshareBridge.progress(engine).coerceIn(90, 100)
+                            progress(p)
+                            try {
+                                Thread.sleep(PROGRESS_POLL_MS)
+                            } catch (_: InterruptedException) {
+                                break
+                            }
+                        }
+                    }
+                    val heldMs = SystemClock.elapsedRealtime() - holdStartMs
                     progress(100)
-                    AttemptOutcome(EInkFlashResult(true, "OK", "Waveshare official"), retryable = false)
+                    AttemptOutcome(
+                        EInkFlashResult(
+                            true,
+                            "OK",
+                            "Waveshare official",
+                            needsPanelVerify = fastReport,
+                        ),
+                        retryable = false,
+                    ).also {
+                        Log.i(TAG, "Success after ${heldMs}ms total (fastReport=$fastReport)")
+                    }
                 }
                 result == 1 -> {
                     progress(finalProgress.coerceIn(1, 99))
@@ -300,7 +338,8 @@ object OfficialWaveshareDriver {
                     )
                 }
                 else -> {
-                    val tagDead = !isoDep.isConnected ||
+                    val earlyLoss = totalMs < EARLY_TAG_LOSS_MS
+                    val tagDead = earlyLoss || !isoDep.isConnected ||
                         (afterTransferProgress < 0 && totalMs > 5_000L)
                     val stalled = refreshStalled.get() ||
                         peakEngineProgress.get() >= REFRESH_PHASE_PROGRESS
@@ -308,9 +347,12 @@ object OfficialWaveshareDriver {
                         EInkFlashResult(
                             false,
                             when {
+                                earlyLoss ->
+                                    "NFC link dropped too soon — lift the phone off the module for 2 seconds, " +
+                                        "then hold it back firmly on the coil."
                                 stalled && peakEngineProgress.get() >= REFRESH_PHASE_PROGRESS ->
-                                    "Upload likely finished at ${peakEngineProgress.get()}% but refresh " +
-                                        "was interrupted — tap Clear panel, wait 90s, then sync again."
+                                    "Upload reached ${peakEngineProgress.get()}% but refresh was interrupted — " +
+                                        "keep holding still for 15+ seconds, or tap Clear panel and try again."
                                 tagDead ->
                                     "Transfer interrupted — partial image on panel. " +
                                         "Tap Clear panel, hold still until Done, wait 90s, then sync your image."
@@ -319,12 +361,13 @@ object OfficialWaveshareDriver {
                                         "Wait 60–90 seconds, hold the phone flat on the coil, then tap Try again."
                             },
                             "Waveshare official",
-                            retryable = !stalled && !tagDead,
+                            retryable = !tagDead,
                             refreshStalled = stalled,
-                            suppressAutoRearm = stalled || tagDead || totalMs > 60_000L,
+                            suppressAutoRearm = tagDead && totalMs > 60_000L,
                         ),
-                        retryable = !stalled && !tagDead,
-                        handleDead = tagDead || stalled,
+                        retryable = !tagDead,
+                        handleDead = tagDead,
+                        earlyTagLoss = earlyLoss,
                     )
                 }
             }

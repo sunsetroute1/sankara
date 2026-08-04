@@ -9,7 +9,7 @@
         android:id="@+id/cropAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/sankara_surface"
+        android:background="?attr/appSurface"
         app:elevation="4dp">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -36,7 +36,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/sankara_surface"
+            android:background="?attr/appSurface"
             android:orientation="horizontal"
             android:padding="16dp">
 

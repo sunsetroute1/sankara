@@ -3,22 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sankara_charcoal">
+    android:background="?attr/appBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/cardStudioAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/sankara_surface"
+        android:background="?attr/appSurface"
         app:elevation="0dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/card_studio_toolbar"
-            style="@style/Widget.Sankara.Toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:title="@string/card_studio_title" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/card_studio_toolbar"
+                style="@style/Widget.Sankara.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@android:drawable/ic_menu_revert"
+                app:title="@string/card_studio_title" />
+
+            <include layout="@layout/include_pan_african_stripe" />
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -31,20 +39,91 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/sankara_space_xl">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="@dimen/sankara_space_lg"
                 android:text="@string/card_studio_subtitle"
-                android:textColor="@color/sankara_text_muted"
-                android:textSize="13sp" />
+                android:textAppearance="@style/TextAppearance.Sankara.Body" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/card_studio_recent_title"
+                android:textAppearance="@style/TextAppearance.Sankara.Section"
+                android:textColor="?attr/appAccent" />
+
+            <TextView
+                android:id="@+id/recentCardsSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="@dimen/sankara_space_sm"
+                android:text="@string/card_studio_recent_subtitle"
+                android:textColor="?attr/appTextMuted"
+                android:textSize="11sp"
+                android:visibility="gone" />
+
+            <HorizontalScrollView
+                android:id="@+id/recentCardsScroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_md"
+                android:scrollbars="none"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/recentCardsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="4dp" />
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:id="@+id/recentCardsEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sankara_space_md"
+                android:background="@drawable/sankara_quick_use_empty"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/sankara_space_lg">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/card_studio_recent_empty_title"
+                    android:textColor="?attr/appTextSecondary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/sankara_space_sm"
+                    android:gravity="center"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/card_studio_recent_empty"
+                    android:textAppearance="@style/TextAppearance.Sankara.Caption"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipClearForm"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@string/card_studio_clear_form"
+                android:visibility="gone" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/sankara_surface_elevated"
+                app:cardBackgroundColor="?attr/appSurfaceElevated"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
@@ -123,7 +202,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/card_hint_qr_content"
                         android:inputType="textUri"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -139,7 +218,7 @@
                         android:hint="@string/card_hint_qr_label"
                         android:inputType="text"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -165,7 +244,7 @@
                         android:hint="@string/card_hint_wifi_ssid"
                         android:inputType="text"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -181,7 +260,7 @@
                         android:hint="@string/card_hint_wifi_password"
                         android:inputType="textVisiblePassword"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.chip.ChipGroup
@@ -238,7 +317,7 @@
                         android:hint="@string/card_hint_contact_name"
                         android:inputType="textPersonName"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -254,7 +333,7 @@
                         android:hint="@string/card_hint_contact_title"
                         android:inputType="text"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -270,7 +349,7 @@
                         android:hint="@string/card_hint_contact_phone"
                         android:inputType="phone"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -286,7 +365,7 @@
                         android:hint="@string/card_hint_contact_email"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -302,7 +381,7 @@
                         android:hint="@string/card_hint_contact_website"
                         android:inputType="textUri"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -328,7 +407,7 @@
                         android:hint="@string/card_hint_links_handle"
                         android:inputType="text"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -344,7 +423,7 @@
                         android:hint="@string/card_hint_link_primary"
                         android:inputType="textUri"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -360,7 +439,7 @@
                         android:hint="@string/card_hint_link_extra"
                         android:inputType="textUri"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -376,7 +455,7 @@
                         android:hint="@string/card_hint_link_extra"
                         android:inputType="textUri"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -392,7 +471,7 @@
                         android:hint="@string/card_hint_link_extra"
                         android:inputType="textUri"
                         android:maxLines="1"
-                        android:textColor="@color/sankara_text_primary" />
+                        android:textColor="?attr/appTextPrimary" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -401,7 +480,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/flashButtonText" />
+                android:text="@string/card_studio_continue" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCardCancel"
@@ -409,7 +488,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
-                android:textColor="@color/sankara_text_muted" />
+                android:textColor="?attr/appTextMuted" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

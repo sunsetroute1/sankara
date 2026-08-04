@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sankara_charcoal"
+    android:background="?attr/appBackground"
     tools:context=".DisplayDiscoveryActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/discoveryAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/sankara_surface"
+        android:background="?attr/appSurface"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="4dp"
                 android:text="@string/discovery_intro"
-                android:textColor="@color/sankara_text_secondary"
+                android:textColor="?attr/appTextSecondary"
                 android:textSize="14sp" />
 
             <com.google.android.material.button.MaterialButton
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/discovery_status_idle"
-                android:textColor="@color/sankara_text_primary"
+                android:textColor="?attr/appTextPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:lineSpacingExtra="4dp"
-                android:textColor="@color/sankara_text_muted"
+                android:textColor="?attr/appTextMuted"
                 android:textSize="13sp"
                 tools:text="UID WSDZ10m · NfcA" />
 
@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="@color/sankara_surface_elevated"
+                app:cardBackgroundColor="?attr/appSurfaceElevated"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 tools:visibility="visible">
@@ -92,7 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/discovery_result_label"
-                        android:textColor="@color/sankara_gold"
+                        android:textColor="?attr/appAccent"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -101,7 +101,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textColor="@color/sankara_text_primary"
+                        android:textColor="?attr/appTextPrimary"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         tools:text="Waveshare 2.7 inch" />
@@ -112,7 +112,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:lineSpacingExtra="4dp"
-                        android:textColor="@color/sankara_text_secondary"
+                        android:textColor="?attr/appTextSecondary"
                         android:textSize="13sp"
                         tools:text="264×176 · Passive NFC-A · High confidence" />
 
@@ -131,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/discovery_probe_log_label"
-                android:textColor="@color/sankara_red"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
@@ -142,7 +142,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="monospace"
                 android:lineSpacingExtra="2dp"
-                android:textColor="@color/sankara_text_muted"
+                android:textColor="?attr/appTextMuted"
                 android:textSize="11sp"
                 tools:text="✓ Waveshare UID / NDEF\n✗ Passive 0xD0/D1 handshake" />
 

@@ -15,6 +15,8 @@ data class EInkFlashResult(
     val refreshStalled: Boolean = false,
     /** Do not auto re-arm reader mode (module needs cooldown after long/stalled sessions). */
     val suppressAutoRearm: Boolean = false,
+    /** Engine returned OK quickly — panel may still be repainting; user should verify visually. */
+    val needsPanelVerify: Boolean = false,
 )
 
 data class NfcFlashSession(

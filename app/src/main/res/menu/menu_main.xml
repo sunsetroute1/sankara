@@ -2,9 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_clear_panel"
+        android:title="@string/nfc_btn_clear_panel"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/settings_title"
-        app:iconTint="@color/sankara_gold"
+        app:iconTint="?attr/appAccent"
         app:showAsAction="always" />
 </menu>

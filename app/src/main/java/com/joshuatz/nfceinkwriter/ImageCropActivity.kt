@@ -27,6 +27,7 @@ class ImageCropActivity : AppCompatActivity() {
     private var cropping = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(Preferences(this).getAppThemeStyle().cropStyleRes)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_crop)
         SystemBarUtils.applyStatusBarInset(findViewById(R.id.cropAppBar))

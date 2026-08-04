@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Sankara</string>
     <string name="app_tagline">Patrie ou mort, nous vaincrons</string>
+    <string name="home_section_status">Status</string>
+    <string name="home_section_last_sync">Last sync</string>
+    <string name="home_section_create">Create</string>
+    <string name="cta_now_playing_short">Now Playing</string>
+    <string name="cta_card_studio_short">Card Studio</string>
 
     <string name="pick_image_file_cta_text">Load Image</string>
     <string name="cta_new_text_invite">Compose Text</string>
@@ -11,7 +16,41 @@
 
     <string name="card_studio_title">Card Studio</string>
     <string name="card_studio_subtitle">Build a QR, Wi-Fi, contact, or links card. The preview shows exactly what the e-ink panel will display.</string>
+    <string name="card_studio_continue">Adjust &amp; sync</string>
     <string name="card_studio_empty">Fill in at least one field first</string>
+    <string name="card_studio_recent_title">Quick use</string>
+    <string name="card_studio_recent_subtitle">Tap a thumbnail to restore fields · long-press for sync, edit, or delete</string>
+    <string name="card_studio_recent_item">Recent card thumbnail</string>
+    <string name="card_studio_recent_empty_title">Nothing here yet</string>
+    <string name="card_studio_recent_empty">Fill in a card below, then tap Adjust &amp; sync. Thumbnails of your last 20 cards will appear here.</string>
+    <string name="card_studio_draft_restored">Restored your last draft</string>
+    <string name="card_studio_clear_form">Clear form</string>
+    <string name="card_studio_discard_title">Discard this card?</string>
+    <string name="card_studio_discard_message">Your current fields will be lost unless you save a draft.</string>
+    <string name="card_studio_save_draft">Save draft &amp; exit</string>
+    <string name="card_studio_discard">Discard</string>
+    <string name="card_studio_keep_editing">Keep editing</string>
+    <string name="card_studio_switch_type_title">Switch card type?</string>
+    <string name="card_studio_switch_type_message">The current card has content. Other type fields stay saved but hidden.</string>
+    <string name="card_studio_switch_continue">Switch</string>
+    <string name="card_studio_recent_menu_title">%1$s</string>
+    <string name="card_studio_action_open_editor">Open in editor</string>
+    <string name="card_studio_action_sync_now">Sync now</string>
+    <string name="card_studio_action_duplicate">Duplicate to form</string>
+    <string name="card_studio_action_delete">Delete</string>
+    <string name="card_studio_recent_restored">Card loaded — edit or tap Adjust &amp; sync</string>
+    <string name="card_studio_recent_deleted">Removed from quick use</string>
+    <string name="image_edit_discard_title">Discard edits?</string>
+    <string name="image_edit_discard_message">Crop, rotate, and slider changes will be lost.</string>
+    <string name="nfc_exit_armed_title">Cancel sync?</string>
+    <string name="nfc_exit_armed_message">You armed a sync but have not transferred yet.</string>
+    <string name="nfc_exit_transfer_title">Leave during sync?</string>
+    <string name="nfc_exit_transfer_message">Leaving now may interrupt the panel update.</string>
+    <string name="nfc_exit_leave">Leave</string>
+    <string name="nfc_exit_stay">Stay</string>
+    <string name="nfc_panel_settings_link">Panel: %1$s · %2$s — tap to change</string>
+    <string name="reflash_last_sync">Last synced %1$s</string>
+    <string name="reflash_no_image">No image synced yet</string>
     <string name="card_type_qr">QR Code</string>
     <string name="card_type_wifi">Wi-Fi</string>
     <string name="card_type_contact">Contact</string>
@@ -37,6 +76,12 @@
     <string name="settings_quote_attribution">— %1$s</string>
     <string name="settings_quote_tap_hint">Tap for another quote</string>
     <string name="settings_bg_content_description">Thomas Sankara portrait background</string>
+    <string name="settings_theme_section">Appearance</string>
+    <string name="settings_theme_summary">Choose the app look and feel</string>
+    <string name="settings_theme_sankara">Sankara</string>
+    <string name="settings_theme_sankara_desc">Pan-African palette with revolutionary accents</string>
+    <string name="settings_theme_modern">Modern</string>
+    <string name="settings_theme_modern_desc">Sleek neutral dark theme</string>
     <string name="settings_display_section">Display hardware</string>
     <string name="settings_display_size">Panel size</string>
     <string name="settings_display_size_summary">Match your Waveshare or case module</string>
@@ -67,6 +112,9 @@
     <string name="settings_discovery_section">Display discovery</string>
     <string name="settings_discovery_summary">Identify passive e-paper modules on-device. Probes protocols without flashing an image.</string>
     <string name="settings_open_discovery">Discover display</string>
+    <string name="settings_troubleshoot_section">Display troubleshooting</string>
+    <string name="settings_troubleshoot_summary">Diagnose scrambled or partial panels, run recovery test patterns, and export sync logs.</string>
+    <string name="settings_open_troubleshoot">Troubleshoot display</string>
     <string name="status_nfc_enabled">NFC: on</string>
     <string name="status_nfc_disabled">NFC: off</string>
     <string name="status_nfc_unavailable">NFC: unavailable</string>
@@ -91,23 +139,34 @@
     <string name="nfc_status_refreshing">Refreshing display… keep holding until Done.</string>
     <string name="nfc_status_refreshing_elapsed">Refreshing display… %1$s elapsed. Keep holding until Done.</string>
     <string name="nfc_status_uploading_elapsed">Sending image… %1$s elapsed. Usually ~6 seconds on a good link.</string>
-    <string name="nfc_status_refreshing_slow">Still at %1$s — refresh poll stuck. Keep holding, or tap Cancel and wait 90s.</string>
+    <string name="nfc_status_refreshing_slow">Still at %1$s — refresh poll stuck. Keep holding, or tap Cancel and try again.</string>
     <string name="nfc_status_cancelling">Cancelling sync…</string>
-    <string name="nfc_status_cancelled">Sync cancelled. Wait ~90 seconds, then tap Sync again.</string>
+    <string name="nfc_status_cancelled">Sync cancelled. Tap Sync again and hold the phone on the module.</string>
     <string name="nfc_btn_cancel_sync">Cancel</string>
-    <string name="nfc_status_cooldown">Display is still updating. Wait %1$d seconds before syncing again.</string>
-    <string name="nfc_sync_cooldown_toast">Module still updating — wait %1$d seconds before syncing again.</string>
+    <string name="nfc_status_armed_detail">Hold the upper-back of the phone on the module coil. If it was already there, lift briefly and hold again.</string>
     <string name="nfc_status_hold_still">Do not tap the screen during sync — lifting the phone breaks NFC.</string>
     <string name="nfc_status_retrying">Module busy — retrying (attempt %1$d of %2$d). Keep holding the phone still.</string>
     <string name="nfc_status_auto_retry">Reconnecting to the module for another try — keep the phone in place.</string>
+    <string name="nfc_status_powering_refresh">Powering panel refresh… %1$s elapsed.\nKeep holding — do not lift yet.</string>
+    <string name="nfc_status_success_verify">Transfer finished — check the panel now.\nIf it did not change, tap Sync again, lift the phone off for 2 seconds, then hold firmly until Done (~12s).</string>
     <string name="nfc_status_success">Module reported success</string>
-    <string name="nfc_status_success_refresh">Check the panel — did it actually change?\nIf it did, you\'re done. If not, wait ~90 seconds for the module to finish refreshing, then tap Sync again and hold the phone firmly on the coil.</string>
-    <string name="nfc_status_success_clear">Panel reset sent — check that the display went all white.\nWait ~90 seconds, then tap Start sync to send your image.</string>
+    <string name="nfc_status_success_refresh">Check the panel — did it actually change?\nIf not, tap Sync again, lift the phone off the module briefly, then hold firmly on the coil.</string>
+    <string name="nfc_status_success_clear">Panel reset sent — check that the display went all white.\nTap Start sync to send your image.</string>
     <string name="nfc_status_failed">Transfer failed: %1$s</string>
     <string name="nfc_status_detail_tech">Detected: %1$s</string>
     <string name="nfc_status_driver_detected">%1$s · %2$s</string>
     <string name="nfc_btn_retry">Sync again</string>
     <string name="nfc_btn_clear_panel">Clear panel</string>
+    <string name="nfc_clear_panel_title">Clearing panel</string>
+    <string name="nfc_clear_panel_waiting">Hold the upper-back of your phone on the module.\nThe display will turn all white.</string>
+    <string name="nfc_clear_panel_transferring">Sending white frame… keep holding still.</string>
+    <string name="nfc_clear_panel_powering">Powering refresh… %1$s — almost done.</string>
+    <string name="nfc_clear_panel_success">Panel cleared.\nThe display should be all white now.</string>
+    <string name="nfc_clear_panel_failed">Could not clear the panel.\n%1$s</string>
+    <string name="nfc_clear_panel_cancel">Cancel</string>
+    <string name="nfc_clear_panel_retry">Try again</string>
+    <string name="nfc_exit_clear_title">Cancel clearing?</string>
+    <string name="nfc_exit_clear_message">The panel has not been reset yet.</string>
     <string name="nfc_btn_start_sync">Start sync</string>
     <string name="nfc_btn_done">Done</string>
 
@@ -120,8 +179,10 @@
     <string name="image_preview_pick_again">Pick another</string>
 
     <string name="image_edit_title">Edit image</string>
-    <string name="image_edit_subtitle">Crop, adjust, and preview how it will look on your e-ink panel.</string>
+    <string name="image_edit_subtitle">Crop, rotate, adjust, and preview how it will look on your e-ink panel.</string>
     <string name="image_edit_crop">Crop</string>
+    <string name="image_edit_fit_panel">Fit panel</string>
+    <string name="image_edit_fit_panel_done">Sized to fit %1$s panel (%2$d×%3$d)</string>
     <string name="image_edit_rotate">Rotate</string>
     <string name="image_edit_flip_h">Flip H</string>
     <string name="image_edit_flip_v">Flip V</string>
@@ -144,7 +205,7 @@
 
     <string name="flashButtonText">Sync to case</string>
     <string name="image_preview_content_description">Image preview</string>
-    <string name="hold_phone_to_flash_text">Hold upper-back of phone on module. Usually ~6 seconds — keep still until Done.</string>
+    <string name="hold_phone_to_flash_text">Hold upper-back of phone on module. Keep still 12–15 seconds until Done.</string>
     <string name="imagePreviewText">Preview</string>
     <string name="pleaseWaitWhileFlashingText">Transmitting…</string>
     <string name="now_playing_need_access">Enable notification access in Settings to read the current track.</string>
@@ -179,4 +240,79 @@
     <string name="discovery_apply_defaults">Use as default panel</string>
     <string name="discovery_probe_log_label">Probe log</string>
     <string name="nfc_status_discovering">Identifying module…</string>
+
+    <string name="troubleshoot_title">Display troubleshooting</string>
+    <string name="troubleshoot_intro">Scrambled, partial, or stuck images usually mean the NFC transfer was interrupted or the panel refresh did not finish. Pick what you see, review the last sync, then run a recovery pattern.</string>
+    <string name="troubleshoot_symptom_section">What does the panel look like?</string>
+    <string name="troubleshoot_symptom_hint">Choose a symptom</string>
+    <string name="troubleshoot_last_sync_section">Last sync attempt</string>
+    <string name="troubleshoot_recovery_section">Recovery patterns</string>
+    <string name="troubleshoot_recovery_summary">Each pattern fills the whole panel. If the result is also scrambled, the issue is likely physical (coil contact or module state) rather than your image.</string>
+    <string name="troubleshoot_physical_section">Physical checklist</string>
+    <string name="troubleshoot_physical_checklist">• Remove thick phone cases\n• Align the phone\'s NFC coil (upper-back on Samsung) over the module coil\n• Disable Battery Saver; keep screen on\n• Hold flat and still until the app shows Done (~6s typical)\n• Wait 90s between attempts if the module was mid-refresh\n• After a bad transfer, run Clear panel (white) before syncing your image again</string>
+    <string name="troubleshoot_no_sync_history">No sync history yet. After your next sync attempt, details will appear here.</string>
+    <string name="troubleshoot_outcome_success">Reported success</string>
+    <string name="troubleshoot_outcome_failed">Failed</string>
+    <string name="troubleshoot_entry_progress">Progress: %1$d%% · Duration: %2$d s</string>
+    <string name="troubleshoot_entry_driver">Driver: %1$s</string>
+    <string name="troubleshoot_entry_pattern">Recovery pattern: %1$s</string>
+    <string name="troubleshoot_entry_refresh_stalled">Refresh poll stalled at 99%</string>
+    <string name="troubleshoot_entry_needs_verify">App reported success — panel may still be refreshing</string>
+    <string name="troubleshoot_action_white">Clear panel (all white)</string>
+    <string name="troubleshoot_action_black">Full black test</string>
+    <string name="troubleshoot_action_checkerboard">Checkerboard test</string>
+    <string name="troubleshoot_action_bars">Horizontal bars test</string>
+    <string name="troubleshoot_action_recommended">Run recommended fix</string>
+    <string name="troubleshoot_action_recommended_pattern">Run recommended: %1$s</string>
+    <string name="troubleshoot_export_report">Share diagnostic report</string>
+    <string name="troubleshoot_export_subject">Sankara display diagnostic report</string>
+    <string name="troubleshoot_pattern_white">All white</string>
+    <string name="troubleshoot_pattern_black">All black</string>
+    <string name="troubleshoot_pattern_checkerboard">Checkerboard</string>
+    <string name="troubleshoot_pattern_bars">Horizontal bars</string>
+
+    <string name="troubleshoot_symptom_partial_label">Mixed old + new image (partial overlay)</string>
+    <string name="troubleshoot_symptom_half_label">Only part of the panel updated</string>
+    <string name="troubleshoot_symptom_unchanged_label">Panel unchanged after sync</string>
+    <string name="troubleshoot_symptom_ghost_label">Faint ghost of previous image</string>
+    <string name="troubleshoot_symptom_inverted_label">Black and white look swapped</string>
+    <string name="troubleshoot_symptom_bands_label">Horizontal stripes or bands</string>
+    <string name="troubleshoot_symptom_noise_label">Random garbage / noise pixels</string>
+
+    <string name="troubleshoot_symptom_partial_title">Partial overlay</string>
+    <string name="troubleshoot_symptom_partial_cause">Likely cause: NFC dropped mid-upload (phone lifted too early, poor coil contact, or module busy from a prior refresh). Some pixels updated, others did not.</string>
+    <string name="troubleshoot_symptom_partial_fix">Fix: Run Clear panel (white), wait 90 seconds, then sync again. Hold the phone still until Done — do not lift at ~6s unless the app says so.</string>
+
+    <string name="troubleshoot_symptom_half_title">Half-updated panel</string>
+    <string name="troubleshoot_symptom_half_cause">Likely cause: refresh phase lost power partway through the physical repaint. Common with weak NFC coupling or moving the phone during the 99% refresh phase.</string>
+    <string name="troubleshoot_symptom_half_fix">Fix: Send the checkerboard test. A clean checkerboard confirms the full panel can refresh. If only one half updates, improve coil alignment and retry.</string>
+
+    <string name="troubleshoot_symptom_unchanged_title">No visible change</string>
+    <string name="troubleshoot_symptom_unchanged_cause">Likely cause: module acknowledged the transfer but did not repaint (marginal power), or you synced the same-looking image. Check the last sync progress — if it reached 100% quickly, coupling may be too weak for the repaint.</string>
+    <string name="troubleshoot_symptom_unchanged_fix">Fix: Run the full black test — any real refresh should flash the panel. If black also fails to appear, retry with no case, Battery Saver off, and firm centered contact.</string>
+
+    <string name="troubleshoot_symptom_ghost_title">Ghost image</string>
+    <string name="troubleshoot_symptom_ghost_cause">Likely cause: incomplete refresh left prior ink state on the e-paper. E-ink can retain a faint previous image until a full-frame update completes.</string>
+    <string name="troubleshoot_symptom_ghost_fix">Fix: Clear panel (white) twice with 90s between attempts, then sync your image. Avoid re-syncing within the 90s cooldown after success.</string>
+
+    <string name="troubleshoot_symptom_inverted_title">Inverted tones</string>
+    <string name="troubleshoot_symptom_inverted_cause">Likely cause: editor Invert was enabled, or a re-dither pass altered the halftone. Less often, a partial transfer can look like inverted regions.</string>
+    <string name="troubleshoot_symptom_inverted_fix">Fix: Re-open the image in the editor and check Invert. Run checkerboard — if the pattern is also wrong, export the diagnostic report and note the last sync driver.</string>
+
+    <string name="troubleshoot_symptom_bands_title">Horizontal bands</string>
+    <string name="troubleshoot_symptom_bands_cause">Likely cause: row-wise refresh dropout — upload interrupted during a specific segment, or the module lost power mid-refresh.</string>
+    <string name="troubleshoot_symptom_bands_fix">Fix: Run horizontal bars test. Missing bands indicate which rows failed. Clear panel first if the image is unreadable.</string>
+
+    <string name="troubleshoot_symptom_noise_title">Random noise</string>
+    <string name="troubleshoot_symptom_noise_cause">Likely cause: severe transfer corruption (tag lost repeatedly) or the module controller is wedged after multiple interrupted refreshes.</string>
+    <string name="troubleshoot_symptom_noise_fix">Fix: Leave the module away from NFC for 5 minutes (full discharge), then Clear panel (white). If noise persists on a solid white pattern, try another phone to rule out the module.</string>
+
+    <string name="recovery_panel_title">Panel recovery</string>
+    <string name="recovery_panel_waiting_white">Hold the upper-back of your phone on the module.\nThe display will turn all white.</string>
+    <string name="recovery_panel_waiting_black">Hold the phone on the module.\nThe display will turn all black.</string>
+    <string name="recovery_panel_waiting_checkerboard">Hold the phone on the module.\nSending a checkerboard test pattern.</string>
+    <string name="recovery_panel_waiting_bars">Hold the phone on the module.\nSending horizontal bars test pattern.</string>
+    <string name="recovery_panel_transferring">Sending recovery frame… keep holding still.</string>
+    <string name="recovery_panel_success">Recovery pattern sent.\nCheck that the full panel updated evenly.</string>
+    <string name="recovery_panel_failed">Recovery failed.\n%1$s</string>
 </resources>

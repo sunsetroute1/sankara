@@ -34,8 +34,6 @@ import androidx.activity.result.PickVisualMediaRequest
 
 import androidx.activity.result.contract.ActivityResultContracts
 
-import androidx.appcompat.app.AppCompatActivity
-
 import androidx.cardview.widget.CardView
 
 import androidx.lifecycle.lifecycleScope
@@ -52,7 +50,7 @@ import kotlinx.coroutines.withContext
 
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ThemedActivity() {
 
     private var preferences: Preferences? = null
 
@@ -122,6 +120,8 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
+        ThemeDecor.applyMainScreen(this)
+
         SystemBarUtils.applyStatusBarInset(findViewById(R.id.appBar))
         SystemBarUtils.applyNavigationBarInset(findViewById(R.id.mainScroll))
 
@@ -131,13 +131,27 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<MaterialToolbar>(R.id.main_toolbar).setOnMenuItemClickListener { item ->
 
-            if (item.itemId == R.id.action_settings) {
+            when (item.itemId) {
 
-                startActivity(Intent(this, SettingsActivity::class.java))
+                R.id.action_settings -> {
 
-                true
+                    startActivity(Intent(this, SettingsActivity::class.java))
 
-            } else false
+                    true
+
+                }
+
+                R.id.action_clear_panel -> {
+
+                    launchClearPanel()
+
+                    true
+
+                }
+
+                else -> false
+
+            }
 
         }
 
@@ -160,6 +174,10 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+
+
+        findViewById<MaterialButton>(R.id.cta_clear_panel).setOnClickListener { launchClearPanel() }
 
 
 
@@ -197,7 +215,7 @@ class MainActivity : AppCompatActivity() {
     private fun handleIncomingIntent(intent: Intent?) {
         if (!ImageImportHelper.isShareIntent(intent)) return
         val uri = ImageImportHelper.extractShareUri(intent) ?: return
-        importAndEditImage(uri, autoCrop = true, fromShare = true)
+        importAndEditImage(uri, fromShare = true)
         setIntent(Intent(this, MainActivity::class.java))
     }
 
@@ -216,6 +234,15 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
+    private fun launchClearPanel() {
+        startActivity(
+            Intent(this, NfcFlasher::class.java).apply {
+                putExtra(IntentKeys.StartPanelRecovery, true)
+                putExtra(IntentKeys.PanelRecoveryPattern, PanelTestPattern.WHITE.storageKey)
+            },
+        )
+    }
 
     private fun launchImagePicker() {
 
@@ -238,10 +265,10 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun processPickedImage(uri: Uri) {
-        importAndEditImage(uri, autoCrop = true, fromShare = false)
+        importAndEditImage(uri, fromShare = false)
     }
 
-    private fun importAndEditImage(uri: Uri, autoCrop: Boolean, fromShare: Boolean) {
+    private fun importAndEditImage(uri: Uri, fromShare: Boolean) {
         lifecycleScope.launch {
             try {
                 val ok = ImageImportHelper.saveUriToPickSource(this@MainActivity, uri)
@@ -261,9 +288,7 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 }
                 editLauncher.launch(
-                    Intent(this@MainActivity, ImageEditActivity::class.java).apply {
-                        if (autoCrop) putExtra(ImageEditActivity.EXTRA_AUTO_CROP, true)
-                    },
+                    Intent(this@MainActivity, ImageEditActivity::class.java),
                 )
             } catch (e: Exception) {
                 Log.e("MainActivity", "Image import failed", e)
@@ -341,7 +366,7 @@ class MainActivity : AppCompatActivity() {
 
                 )
 
-                openFileOutput(GeneratedImageFilename, Context.MODE_PRIVATE).use { out ->
+                openFileOutput(PickedSourceFilename, Context.MODE_PRIVATE).use { out ->
 
                     card.compress(Bitmap.CompressFormat.PNG, 100, out)
 
@@ -359,7 +384,7 @@ class MainActivity : AppCompatActivity() {
 
                 ).show()
 
-                startActivity(Intent(this@MainActivity, ImagePreviewActivity::class.java))
+                startActivity(Intent(this@MainActivity, ImageEditActivity::class.java))
 
             } catch (e: Exception) {
 
@@ -415,14 +440,20 @@ class MainActivity : AppCompatActivity() {
 
             getString(R.string.status_color, prefs.getColorMode().label)
 
-        findViewById<TextView>(R.id.chipNfcStatus).text = when (NfcHelper.getRadioState(this)) {
-
-            NfcRadioState.ENABLED -> getString(R.string.status_nfc_enabled)
-
-            NfcRadioState.DISABLED -> getString(R.string.status_nfc_disabled)
-
-            NfcRadioState.UNAVAILABLE -> getString(R.string.status_nfc_unavailable)
-
+        val nfcState = NfcHelper.getRadioState(this)
+        findViewById<TextView>(R.id.chipNfcStatus).apply {
+            text = when (nfcState) {
+                NfcRadioState.ENABLED -> getString(R.string.status_nfc_enabled)
+                NfcRadioState.DISABLED -> getString(R.string.status_nfc_disabled)
+                NfcRadioState.UNAVAILABLE -> getString(R.string.status_nfc_unavailable)
+            }
+            setTextColor(
+                when (nfcState) {
+                    NfcRadioState.ENABLED -> ThemeColors.resolve(this@MainActivity, R.attr.appSuccess)
+                    NfcRadioState.DISABLED -> ThemeColors.resolve(this@MainActivity, R.attr.appError)
+                    NfcRadioState.UNAVAILABLE -> ThemeColors.resolve(this@MainActivity, R.attr.appTextMuted)
+                },
+            )
         }
 
     }
@@ -447,23 +478,36 @@ class MainActivity : AppCompatActivity() {
 
         val preview = findViewById<ImageView>(R.id.reflashButtonImage)
 
+        val lastSyncView = findViewById<TextView>(R.id.reflashLastSync)
+
         if (lastFile.exists()) {
 
             hasReFlashableImage = true
 
-            reFlashButton.setCardBackgroundColor(getColor(R.color.sankara_surface_elevated))
+            reFlashButton.setCardBackgroundColor(ThemeColors.resolve(this, R.attr.appSurfaceElevated))
 
             preview.setImageURI(null)
 
             preview.setImageURI(Uri.fromFile(lastFile))
 
+            LastGeneratedImage.formattedSavedAt(this)?.let { formatted ->
+                lastSyncView.text = getString(R.string.reflash_last_sync, formatted)
+                lastSyncView.visibility = android.view.View.VISIBLE
+            } ?: run {
+                lastSyncView.visibility = android.view.View.GONE
+            }
+
         } else {
 
             hasReFlashableImage = false
 
-            reFlashButton.setCardBackgroundColor(getColor(R.color.sankara_surface))
+            reFlashButton.setCardBackgroundColor(ThemeColors.resolve(this, R.attr.appSurface))
 
             preview.setImageDrawable(getDrawable(android.R.drawable.stat_sys_warning))
+
+            lastSyncView.text = getString(R.string.reflash_no_image)
+
+            lastSyncView.visibility = android.view.View.VISIBLE
 
         }
 

@@ -47,6 +47,7 @@ object PrefKeys {
     var NfcPromptDisableOnClose = "Nfc_Prompt_Disable_On_Close"
     var TagProfiles = "Tag_Profiles"
     var DevicePassword = "Device_Password"
+    var AppThemeStyle = "App_Theme_Style"
 }
 
 const val DefaultDevicePassword = "1234"
@@ -55,6 +56,9 @@ object IntentKeys {
     var GeneratedImgPath = "$PackageName.imgUri"
     var GeneratedImgMime = "$PackageName.imgMime"
     const val ArmSync = "$PackageName.armSync"
+    const val StartClearPanel = "$PackageName.startClearPanel"
+    const val StartPanelRecovery = "$PackageName.startPanelRecovery"
+    const val PanelRecoveryPattern = "$PackageName.panelRecoveryPattern"
 }
 
 val GeneratedImageFilename = "generated.png"

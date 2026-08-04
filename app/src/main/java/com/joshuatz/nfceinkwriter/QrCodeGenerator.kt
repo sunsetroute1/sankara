@@ -13,9 +13,58 @@ object QrCodeGenerator {
     /** Pick lowest EC that fits — larger payloads need L for e-ink QR capacity. */
     fun generateBestEffort(content: String, size: Int): Bitmap? {
         for (ec in listOf(ErrorCorrectionLevel.M, ErrorCorrectionLevel.L)) {
-            generate(content, size, ec)?.let { return it }
+            generateCrispForEink(content, size, ec)?.let { return it }
         }
         return null
+    }
+
+    /**
+     * Renders each QR module as an equal integer pixel block — stays sharp after e-ink dither.
+     * Adds a white quiet zone so phone cameras lock on faster.
+     */
+    fun generateCrispForEink(
+        content: String,
+        targetSize: Int,
+        errorCorrection: ErrorCorrectionLevel = ErrorCorrectionLevel.L,
+    ): Bitmap? {
+        if (content.isBlank() || targetSize <= 0) return null
+        return try {
+            val hints = mapOf(
+                EncodeHintType.MARGIN to 2,
+                EncodeHintType.ERROR_CORRECTION to errorCorrection,
+                EncodeHintType.CHARACTER_SET to "UTF-8",
+            )
+            val matrix = QRCodeWriter().encode(content, BarcodeFormat.QR_CODE, 1, 1, hints)
+            val modules = matrix.width
+            if (modules <= 0) return null
+
+            // Quiet zone: 4 modules per QR spec (ZXing MARGIN=2 → 2 modules each side).
+            val quietModules = 4
+            val totalModules = modules + quietModules
+            val modulePx = maxOf(1, targetSize / totalModules)
+            val qrSide = totalModules * modulePx
+
+            val pixels = IntArray(qrSide * qrSide) { Color.WHITE }
+            val offset = (quietModules / 2) * modulePx
+            for (y in 0 until modules) {
+                for (x in 0 until modules) {
+                    if (!matrix[x, y]) continue
+                    val startX = offset + x * modulePx
+                    val startY = offset + y * modulePx
+                    for (dy in 0 until modulePx) {
+                        val row = (startY + dy) * qrSide
+                        for (dx in 0 until modulePx) {
+                            pixels[row + startX + dx] = Color.BLACK
+                        }
+                    }
+                }
+            }
+            Bitmap.createBitmap(qrSide, qrSide, Bitmap.Config.ARGB_8888).apply {
+                setPixels(pixels, 0, qrSide, 0, 0, qrSide, qrSide)
+            }
+        } catch (_: Exception) {
+            null
+        }
     }
 
     fun generate(content: String, size: Int): Bitmap? =

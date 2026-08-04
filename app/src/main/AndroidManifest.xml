@@ -84,35 +84,6 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
-            android:name=".TrailTagActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
-
-        <activity
-            android:name=".TrailTagProfileActivity"
-            android:exported="false"
-            android:parentActivityName=".TrailTagActivity" />
-
-        <activity
-            android:name=".TrailTagPublicProfileActivity"
-            android:exported="false"
-            android:parentActivityName=".TrailTagActivity" />
-
-        <activity
-            android:name=".TrailTagLocalProfileActivity"
-            android:exported="true"
-            android:parentActivityName=".TrailTagActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="trailtag"
-                    android:scheme="sankara" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".NfcFlasher"
             android:exported="true"
             android:launchMode="singleTop">

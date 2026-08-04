@@ -239,12 +239,7 @@ class NfcFlasher : AppCompatActivity() {
         }
 
         findViewById<ImageView>(R.id.previewImageView).let { preview ->
-            mBitmap?.let { bmp ->
-                val pixels = preferences.getScreenSizePixels()
-                PanelPreview.bind(preview, bmp, pixels.first, pixels.second)
-            } ?: run {
-                preview.setImageURI(mImgFileUri)
-            }
+            bindSyncPreview(preview)
         }
 
         whileFlashingArea = findViewById(R.id.whileFlashingArea)
@@ -843,10 +838,16 @@ class NfcFlasher : AppCompatActivity() {
             return rev22
         }
 
+        val officialBitmap = if (recoveryPattern == null) {
+            WaveshareBitmapPrep.invertForOfficialEngine(payload)
+        } else {
+            payload
+        }
+
         val official = OfficialWaveshareDriver.transferSync(
             context = this,
             tag = tag,
-            bitmap = payload,
+            bitmap = officialBitmap,
             panelType = sdkType,
             password = preferences.getDevicePassword(),
             progress = progress,
@@ -979,6 +980,20 @@ class NfcFlasher : AppCompatActivity() {
         )
     }
 
+    /** Preview matches the exact payload sent over NFC (after WaveshareBitmapPrep). */
+    private fun bindSyncPreview(previewView: ImageView = findViewById(R.id.previewImageView)) {
+        val bitmap = mBitmap
+        if (bitmap == null) {
+            previewView.setImageURI(mImgFileUri)
+            return
+        }
+        val (panelW, panelH) = preferences.getScreenSizePixels()
+        val payload = preparedPayloadBitmap
+            ?: WaveshareBitmapPrep.prepareForOfficial(bitmap, panelW, panelH).also { preparedPayloadBitmap = it }
+        // Preview shows expected panel appearance (editor halftone), not the polarity-swapped wire payload.
+        PanelPreview.bind(previewView, payload, panelW, panelH)
+    }
+
     private fun beginTransfer(tag: Tag, waveshareAar: Boolean) {
         val bitmap = mBitmap
         if (bitmap == null) {
@@ -1081,6 +1096,7 @@ class NfcFlasher : AppCompatActivity() {
         }
         updateSyncArmedUi()
         prepareTransferPayload()
+        bindSyncPreview()
         if (NfcHelper.isEnabled(this)) {
             restartNfcListening()
             uiHandler.postDelayed({

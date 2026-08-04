@@ -3,7 +3,7 @@ package com.joshuatz.nfceinkwriter.nfc.waveshare
 
 
 import android.graphics.Bitmap
-
+import android.graphics.Color
 import android.graphics.Matrix
 
 import android.util.Log
@@ -116,7 +116,8 @@ object Rev22BitmapEncoder {
 
                             val px = pixels[index]
 
-                            if ((px and 0xFF) > 128) {
+                            val lum = Color.red(px) * 0.299f + Color.green(px) * 0.587f + Color.blue(px) * 0.114f
+                            if (lum > 128f) {
 
                                 value = value or 1
 

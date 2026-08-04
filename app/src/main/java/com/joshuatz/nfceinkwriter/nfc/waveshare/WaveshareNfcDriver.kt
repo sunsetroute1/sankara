@@ -28,6 +28,7 @@ class WaveshareNfcDriver : EInkNfcDriver {
             ?: WavesharePanel.sdkTypeFromLegacyEnum(session.screenSizeEnum)
         val expected = WavesharePanel.expectedPixels(sdkType)
         val payload = WaveshareBitmapPrep.prepareForOfficial(bitmap, expected.first, expected.second)
+        val officialBitmap = WaveshareBitmapPrep.invertForOfficialEngine(payload)
         Log.i(
             TAG,
             "Transfer sdkType=$sdkType expected=${expected.first}x${expected.second} " +
@@ -37,7 +38,7 @@ class WaveshareNfcDriver : EInkNfcDriver {
         OfficialWaveshareDriver.transferSync(
             context = session.context,
             tag = tag,
-            bitmap = payload,
+            bitmap = officialBitmap,
             panelType = sdkType,
             password = session.devicePassword,
             progress = progress,

@@ -42,8 +42,9 @@ import com.joshuatz.nfceinkwriter.trailtag.SharingMode
 
 import com.joshuatz.nfceinkwriter.trailtag.TrailActivityType
 
-import com.joshuatz.nfceinkwriter.trailtag.TrailTagQr
-import com.joshuatz.nfceinkwriter.trailtag.TrailTagQrPayload
+import androidx.core.content.FileProvider
+
+import com.joshuatz.nfceinkwriter.trailtag.TrailTagOfflineQr
 
 import com.joshuatz.nfceinkwriter.trailtag.TrailTagRenderRequest
 
@@ -149,6 +150,8 @@ class TrailTagActivity : ThemedActivity() {
 
         findViewById<MaterialButton>(R.id.btnTrailTagPublicProfile).setOnClickListener { openProfileViewer() }
 
+        findViewById<MaterialButton>(R.id.btnTrailTagShareHtml)?.setOnClickListener { shareOfflineHtml() }
+
 
 
         repository.regenerateLocalHtml()
@@ -164,6 +167,8 @@ class TrailTagActivity : ThemedActivity() {
     override fun onResume() {
 
         super.onResume()
+
+        repository.regenerateLocalHtml()
 
         refreshDashboard()
 
@@ -507,17 +512,32 @@ class TrailTagActivity : ThemedActivity() {
             Toast.makeText(this, R.string.trail_tag_profile_required, Toast.LENGTH_LONG).show()
             return
         }
-        val session = repository.getSession()
+        repository.regenerateLocalHtml()
         startActivity(
             Intent(this, TrailTagLocalProfileActivity::class.java).apply {
-                putExtra(TrailTagLocalProfileActivity.EXTRA_QR_TOKEN, TrailTagQrPayload.encode(
-                    TrailTagQrPayload.Snapshot(
-                        profile,
-                        session,
-                        TrailTagStatusResolver.resolve(session),
-                    ),
-                ))
+                putExtra(
+                    TrailTagLocalProfileActivity.EXTRA_HTML_PATH,
+                    repository.localHtmlIndexFile().absolutePath,
+                )
             },
+        )
+    }
+
+    private fun shareOfflineHtml() {
+        val profile = repository.getProfile()
+        if (!profile.hasMinimumContent()) {
+            Toast.makeText(this, R.string.trail_tag_profile_required, Toast.LENGTH_LONG).show()
+            return
+        }
+        val htmlFile = repository.regenerateLocalHtml()
+        val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", htmlFile)
+        startActivity(
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/html"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.trail_tag_share_subject, profile.personLabel()))
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }.let { Intent.createChooser(it, getString(R.string.trail_tag_share_profile)) },
         )
     }
 
@@ -738,12 +758,9 @@ class TrailTagActivity : ThemedActivity() {
         val (panelW, panelH) = prefs.getScreenSizePixels()
         val colorMode = prefs.getColorMode()
         val renderRequest = buildRenderRequest()
-        val snapshot = TrailTagQrPayload.Snapshot(
-            renderRequest.profile,
-            renderRequest.session,
-            renderRequest.status,
-        )
-        if (TrailTagQrPayload.encodedLength(snapshot) > TrailTagQrPayload.MAX_QR_TOKEN_CHARS) {
+        if (TrailTagOfflineQr.qrTargetLength(renderRequest.profile, renderRequest.session) >
+            TrailTagOfflineQr.MAX_QR_URL_CHARS
+        ) {
             Toast.makeText(this, R.string.trail_tag_qr_too_large, Toast.LENGTH_LONG).show()
             syncButton.isEnabled = true
             return
@@ -752,6 +769,7 @@ class TrailTagActivity : ThemedActivity() {
         lifecycleScope.launch {
             try {
                 withContext(Dispatchers.Default) {
+                    repository.regenerateLocalHtml()
                     val eink = TrailTagRenderer.renderForEink(renderRequest, panelW, panelH, colorMode)
                     withContext(Dispatchers.IO) {
                         openFileOutput(GeneratedImageFilename, MODE_PRIVATE).use { out ->

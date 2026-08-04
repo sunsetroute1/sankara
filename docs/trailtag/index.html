@@ -23,8 +23,11 @@ h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--acce
 .row:last-child{border-bottom:none}
 .label{color:var(--muted);flex-shrink:0}
 a.btn{display:block;background:var(--accent);color:#fff;text-align:center;padding:14px;border-radius:10px;text-decoration:none;font-weight:600;margin-top:10px;font-size:16px}
+a.btn.sms{background:#1565c0;margin-top:8px}
+a.btn.secondary{background:#455a64;margin-top:8px}
 a.link{color:var(--accent);word-break:break-all}
 .warn{background:#fff3e0;border-left:4px solid #f9a825;padding:14px;border-radius:6px;margin-bottom:16px;font-size:15px}
+.hint{font-size:13px;color:var(--muted);margin:8px 0}
 .err{padding:24px;text-align:center;color:var(--red)}
 .footer{font-size:12px;color:var(--muted);text-align:center;margin:24px 0 8px}
 </style>
@@ -51,6 +54,11 @@ a.link{color:var(--accent);word-break:break-all}
   }
   function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
   function row(l,v){return '<div class="row"><span class="label">'+esc(l)+'</span><span>'+esc(v||'—')+'</span></div>';}
+  function sms(phone,body){
+    var p=String(phone||'').trim();
+    if(!body)return 'sms:'+p;
+    return 'sms:'+p+'?body='+encodeURIComponent(body);
+  }
   function statusLabel(s){
     var m={active:'Active',past_return:'Past expected return',emergency:'Emergency threshold exceeded',needs_update:'Needs update',none:'No active adventure'};
     return m[s]||s;
@@ -71,18 +79,38 @@ a.link{color:var(--accent);word-break:break-all}
       if(d.note)html+=row('Notes',d.note);
       html+='</div>';
     }
+    if(d.comms&&d.comms.m){
+      html+='<div class="card"><h2>Text adventurer</h2>';
+      if(d.comms.sat)html+='<p class="hint">T-Satellite / satellite SMS</p>';
+      html+='<a class="btn sms" href="'+sms(d.comms.m,d.comms.sms||'')+'">SMS '+esc(d.n)+'</a>';
+      html+='<a class="btn secondary" href="tel:'+esc(d.comms.m)+'">Call adventurer</a>';
+      html+='</div>';
+    }
+    if(d.comms&&d.comms.ir){
+      html+='<div class="card"><h2>Garmin inReach SOS</h2>';
+      html+='<p class="hint">SMS the inReach device over Iridium when online.</p>';
+      html+='<a class="btn sms" href="'+sms(d.comms.ir,d.comms.irb||'')+'">SMS inReach device</a>';
+      html+='</div>';
+    }
     if(d.track&&d.track.length){
-      html+='<div class="card"><h2>Tracking</h2>';
+      html+='<div class="card"><h2>Tracking (online)</h2>';
+      html+='<p class="hint">Opens when you have signal.</p>';
       d.track.forEach(function(t){
         html+='<p style="margin:8px 0"><a class="link" href="'+esc(t.u)+'" rel="noopener">'+esc(t.l)+'</a></p>';
       });
       html+='</div>';
     }
     if(d.contacts&&d.contacts.length){
-      html+='<div class="card"><h2>Emergency</h2>';
+      html+='<div class="card"><h2>Emergency contacts</h2>';
       d.contacts.forEach(function(c){
-        if(c.p)html+='<a class="btn" href="tel:'+esc(c.p)+'">Call '+(c.n||'contact')+'</a>';
-        if(c.s)html+='<a class="btn" style="background:#555;margin-top:8px" href="tel:'+esc(c.s)+'">Call secondary</a>';
+        if(c.p){
+          html+='<a class="btn" href="tel:'+esc(c.p)+'">Call '+(c.n||'contact')+'</a>';
+          html+='<a class="btn sms" href="sms:'+esc(c.p)+'">SMS '+(c.n||'contact')+'</a>';
+        }
+        if(c.s){
+          html+='<a class="btn secondary" href="tel:'+esc(c.s)+'">Call secondary</a>';
+          html+='<a class="btn sms" href="sms:'+esc(c.s)+'">SMS secondary</a>';
+        }
       });
       html+='</div>';
     }
